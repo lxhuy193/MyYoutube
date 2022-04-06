@@ -16,7 +16,7 @@ class TrendingAdapter(val items: List<Item>) : RecyclerView.Adapter<TrendingAdap
         private val tv_videoTitle = view.findViewById<TextView>(R.id.tv_videoTitle)
 
         fun bind(item : Item){
-            Glide.with(itemView.context).load(item.snippet.thumbnails.default.url).into(iv_thumbNail)
+            Glide.with(itemView.context).load(item.snippet.thumbnails.maxres.url).into(iv_thumbNail)
             tv_videoTitle.text = item.snippet.title
 
         }

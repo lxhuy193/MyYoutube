@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
         val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-        val call = request.getTrendding("snippet", 2, "mostPopular", getString(R.string.api_key), "VN", 10)
+        val call = request.getTrendding("snippet", 10, "mostPopular", "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U", "VN", 10)
 
         call.enqueue(object : Callback<TrendFeed>{
             override fun onResponse(call: Call<TrendFeed>, response: Response<TrendFeed>) {
