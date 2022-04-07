@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                     recyclerView.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(this@MainActivity)
-                        adapter = TrendingAdapter(response.body()!!.items)
+                        adapter = MainAdapter(response.body()!!.items, this@MainActivity)
                     }
                 }
             }

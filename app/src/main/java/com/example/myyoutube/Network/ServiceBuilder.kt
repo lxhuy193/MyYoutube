@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceBuilder {
-    private val BASE_URL = "https://www.googleapis.com/"
+    private val BASE_URL = "https://www.googleapis.com/youtube/v3/"
     private val client = OkHttpClient.Builder().build()
 
     private val retrofit = Retrofit.Builder()
