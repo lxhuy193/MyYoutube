@@ -17,8 +17,13 @@ data class ChannelSnippet(
     val description : String,
     val publishedAt : String,
     val thumbnails : ChannelThumbnail,
-    val localized : String,
+    val localized : Localized,
     val country : String
+)
+
+data class Localized(
+    val title: String,
+    val description : String
 )
 
 data class ChannelThumbnail(
@@ -43,3 +48,4 @@ data class ChannelHigh(
     val width: Int,
     val height: Int
 )
+

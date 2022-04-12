@@ -1,16 +1,22 @@
 package com.example.myyoutube
 
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
+import de.hdodenhof.circleimageview.CircleImageView
 import java.util.regex.Pattern
 
 class PlayerActivity : YouTubeBaseActivity(){
     lateinit var utubePlayer : YouTubePlayerView
+    lateinit var tv_videoTitlePlayer : TextView
+    lateinit var civ_channelIhumbnailPlayer : CircleImageView
+    lateinit var tv_channelTitlePlayer : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,16 +25,18 @@ class PlayerActivity : YouTubeBaseActivity(){
         //get intent
         val intent = intent
         val videoId : String? = intent.getStringExtra("videoId")
+        tv_videoTitlePlayer = findViewById(R.id.tv_videoTitlePlayer)
+        tv_videoTitlePlayer.text = intent.getStringExtra("videoTitle")
+        tv_channelTitlePlayer = findViewById(R.id.tv_channelTitlePlayer)
+        tv_channelTitlePlayer.text = intent.getStringExtra("channelTitle")
+        civ_channelIhumbnailPlayer = findViewById(R.id.civ_channelThumbnailPlayer)
+//        println("bbbbbbbb" + intent.getStringExtra("channelTitle"))
+
+        Glide.with(this).load(intent.getStringExtra("channelThumbnail")).into(civ_channelIhumbnailPlayer)
+
 
         utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
-//        if (videoId != null) {
-//            getYoutubeIdVideoFromUrl("https://www.youtube.com/watch?v="+videoId)?.let {
-//                intilizePlayer(
-//                    it
-//                )
-//            }
-//            Toast.makeText(this, videoId, Toast.LENGTH_SHORT).show()
-//        }
+
         if (videoId != null) {
             intilizePlayer(videoId)
         }
@@ -55,15 +63,5 @@ class PlayerActivity : YouTubeBaseActivity(){
         })
     }
 
-//    fun getYoutubeIdVideoFromUrl(inUrl : String) : String?{
-//        if (inUrl.toLowerCase().contains("youtu.be")){
-//            return inUrl.substring(inUrl.lastIndexOf("/")+1)
-//        }
-//        val pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*"
-//        val compiledPattern = Pattern.compile(pattern)
-//        val matcher = compiledPattern.matcher(inUrl)
-//        return if (matcher.find()){
-//            matcher.group()
-//        }else null
-//    }
+
 }
