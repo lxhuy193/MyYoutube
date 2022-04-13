@@ -7,14 +7,14 @@ data class TrendFeed(
     var kind: String,
     var etag: String,
     var items: List<TrendItem>,
-    var nextPageToken: String,
-    var pageInfo: PdfDocument.PageInfo
+//    var nextPageToken: String,
+//    var pageInfo: PdfDocument.PageInfo
 )
 
-data class TrendPageInfo(
-    val totalResults: Int,
-    val resultsPerPage: Int
-)
+//data class TrendPageInfo(
+//    val totalResults: Int,
+//    val resultsPerPage: Int
+//)
 
 data class TrendItem(
     var kind: String,
@@ -30,11 +30,11 @@ data class TrendSnippet(
     var description: String,
     var thumbnails: TrendThumbnail,
     var channelTitle: String,
-    var tags: List<String>,
+//    var tags: List<String>,
     var categoryId: String,
     var liveBroadcastContent: String,
-    var localized: TrendLocalized,
-    var defaultAudioLanguage: String
+//    var localized: TrendLocalized,
+//    var defaultAudioLanguage: String
 )
 
 data class TrendLocalized(

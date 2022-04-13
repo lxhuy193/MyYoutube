@@ -1,43 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.youtube.player.YouTubePlayerView
-        android:id="@+id/utubePlayer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_margin="4dp"
-        android:id="@+id/tv_videoTitlePlayer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="VIDEO TITLE"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-
     <LinearLayout
-        android:layout_margin="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civ_channelThumbnailPlayer"
-            android:layout_width="56dp"
-            android:layout_height="56dp" />
+        <com.google.android.youtube.player.YouTubePlayerView
+            android:id="@+id/utubePlayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <TextView
-            android:layout_marginStart="4dp"
-            android:textSize="16sp"
-            android:id="@+id/tv_channelTitlePlayer"
+            android:id="@+id/tv_videoTitlePlayer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ChannelTitle" />
+            android:layout_margin="4dp"
+            android:text="VIDEO TITLE"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/tv_videoViewPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="17862473 views" />
+
+            <TextView
+                android:id="@+id/tv_videoLikePlayer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="6156172 likes" />
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/tv_videoDescripPlayer"
+                android:text="Video description Video description Video description Video description Video description Video description Video description \n Video description Video description Video description Video description Video description Video description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_channelThumbnailPlayer"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_channelTitlePlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Channel Title"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_channelSubscribes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Channel Sub"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
     </LinearLayout>
 
 
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

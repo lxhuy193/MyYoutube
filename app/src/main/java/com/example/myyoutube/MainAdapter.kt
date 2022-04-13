@@ -31,7 +31,6 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
         val civ_channelImage = view.findViewById<CircleImageView>(R.id.civ_channelImage)
         val tv_channelTitle = view.findViewById<TextView>(R.id.tv_channelTitle)
 
-
 //        fun bind(trendItem: TrendItem) {
 //            Glide.with(itemView.context).load(trendItem.snippet.thumbnails.high.url).into(iv_thumbNail)
 //            tv_videoTitle.text = trendItem.snippet.title
@@ -107,7 +106,7 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
             intent.putExtra("videoId", trendItems[position].id)
             intent.putExtra("videoTitle", trendItems[position].snippet.title)
 
-            //call channelThumbnail, channelTitle to put Intent
+            //call channelThumbnail, channelTitle, channelSubscribes to put Intent
             val requestItent = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
             val callItent = requestItent.getChannel(
                 "snippet",
@@ -115,8 +114,6 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
                 trendItems[position].snippet.channelId
             )
 
-//            val surveyList = mutableListOf<String>()
-//            val onGetSurveyListener: OnGetSurveyListener
             callItent.enqueue(object : Callback<ChannelDetail> {
 
                 override fun onResponse(
@@ -131,11 +128,14 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
                         )
                         intent.putExtra(
                             "channelTitle",
-                            body!!.items[0].snippet.title)
-                        println("aaaaaaaa" + body!!.items[0].snippet.title)
+                            body!!.items[0].snippet.title
+                        )
+                        intent.putExtra(
+                            "channelId",
+                            body!!.items[0].id
+                        )
+
                         context.startActivity(intent)
-//                        val channelThumbnail = body!!.items[0].snippet.thumbnails.high.url
-//                        val channelTitle = body!!.items[0].snippet.title
                     }
                 }
 
@@ -145,16 +145,9 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
 
             })
 
-//            context.startActivity(intent)
         }
 
     }
-
-//    //for calling channelThumbnail, channelTitle to put Intent
-//    interface OnGetSurveyListener {
-//        fun onGetSurveySuccess(result: List<String>);
-//        fun onGetSurveyFailure(t: String);
-//    }
 
     override fun getItemCount(): Int {
         return trendItems.size
