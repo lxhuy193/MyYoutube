@@ -66,7 +66,7 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
 
     override fun onBindViewHolder(holder: VH, position: Int) {
 
-        //channel thumbnail + title main activity
+        //channel thumbnail + channel title
         val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
         val call = request.getChannel(
             "snippet",
@@ -93,7 +93,7 @@ class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
 
         })
 
-        //video title + thumbnail main activity
+        //video title + video thumbnail main activity
         Glide.with(holder.itemView.context).load(trendItems[position].snippet.thumbnails.high.url)
             .into(holder.iv_thumbNail)
         holder.tv_videoTitle.text = trendItems[position].snippet.title

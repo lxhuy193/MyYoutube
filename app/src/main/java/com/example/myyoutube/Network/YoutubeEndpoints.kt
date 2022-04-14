@@ -49,7 +49,7 @@ interface YoutubeEndpoints {
         @Query("part") part: String,
         @Query("relatedToVideoId") relatedToVideoId : String,
         @Query("type") type : String,
-        @Query("maxResults") maxResults : String,
+        @Query("maxResults") maxResults : Int,
         @Query("key") key: String
-    ): Call<TrendFeed>
+    ): Call<RelatedData>
 }

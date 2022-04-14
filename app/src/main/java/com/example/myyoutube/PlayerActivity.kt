@@ -1,11 +1,15 @@
 package com.example.myyoutube
 
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.ChannelStatistics
+import com.example.myyoutube.Data.RelatedData
 import com.example.myyoutube.Data.TrendFeed
 import com.example.myyoutube.Data.VideoPlayerData
 import com.example.myyoutube.Network.ServiceBuilder
@@ -14,6 +18,8 @@ import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
+import com.skydoves.expandablelayout.ExpandableLayout
+import com.skydoves.expandablelayout.expandableLayout
 import de.hdodenhof.circleimageview.CircleImageView
 import org.w3c.dom.Text
 import retrofit2.Call
@@ -30,10 +36,14 @@ class PlayerActivity : YouTubeBaseActivity() {
     lateinit var tv_videoViewPlayer: TextView
     lateinit var tv_videoLikePlayer: TextView
     lateinit var tv_channelSubscribes: TextView
+//    lateinit var expandableVideo: ExpandableLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+//        expandableVideo = findViewById(R.id.expandableVideo)
+//        expandableVideo.expand()
+//        expandableVideo.collapse()
 
         //get intent
         val intent = intent
@@ -125,6 +135,23 @@ class PlayerActivity : YouTubeBaseActivity() {
         })
 
         //call related video by videoId
+        val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+        val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+        val callRelated = requestRelated.getRelatedVideo("snippet", videoId, "video", 20, "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U")
+        callRelated.enqueue(object : Callback<RelatedData>{
+            override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
+                recyclerView.apply {
+                    setHasFixedSize(true)
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false )
+                    adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
+                }
+            }
+
+            override fun onFailure(call: Call<RelatedData>, t: Throwable) {
+                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
+            }
+
+        })
 
 
 
