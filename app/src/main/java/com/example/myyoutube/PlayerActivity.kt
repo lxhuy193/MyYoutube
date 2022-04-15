@@ -1,10 +1,15 @@
 package com.example.myyoutube
 
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
+import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -159,6 +164,22 @@ class PlayerActivity : YouTubeBaseActivity() {
         utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
         if (videoId != null) {
             intilizePlayer(videoId)
+        }
+
+        //button expand
+        val btn_expand = findViewById<Button>(R.id.btn_expand)
+        val cardView = findViewById<CardView>(R.id.cardView)
+        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
+        btn_expand.setOnClickListener {
+            if (expandableLayout.visibility == View.GONE) {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.VISIBLE
+                btn_expand.text = "COLLAPSE"
+            } else {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.GONE
+                btn_expand.text = "EXPAND"
+            }
         }
     }
 
