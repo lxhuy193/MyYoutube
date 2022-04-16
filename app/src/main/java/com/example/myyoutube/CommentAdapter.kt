@@ -26,7 +26,7 @@ class CommentAdapter(val commentItems: List<CommentItem>, val context: Context) 
 
     override fun onBindViewHolder(holder: CommentAdapter.VH, position: Int) {
         Glide.with(holder.itemView.context)
-            .load(commentItems[position].snippet.topLevelComment.snippet.authorChannelUrl)
+            .load(commentItems[position].snippet.topLevelComment.snippet.authorProfileImageUrl)
             .into(holder.civ_userThumnail)
         holder.tv_userName.text =
             commentItems[position].snippet.topLevelComment.snippet.authorDisplayName
