@@ -4,19 +4,13 @@ import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myyoutube.Data.ChannelStatistics
-import com.example.myyoutube.Data.RelatedData
-import com.example.myyoutube.Data.TrendFeed
-import com.example.myyoutube.Data.VideoPlayerData
+import com.example.myyoutube.Data.*
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -142,12 +136,19 @@ class PlayerActivity : YouTubeBaseActivity() {
         //call related video by videoId
         val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
         val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-        val callRelated = requestRelated.getRelatedVideo("snippet", videoId, "video", 20, "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U")
-        callRelated.enqueue(object : Callback<RelatedData>{
+        val callRelated = requestRelated.getRelatedVideo(
+            "snippet",
+            videoId,
+            "video",
+            20,
+            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+        )
+        callRelated.enqueue(object : Callback<RelatedData> {
             override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
                 recyclerView.apply {
                     setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false )
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
                 }
             }
@@ -159,7 +160,6 @@ class PlayerActivity : YouTubeBaseActivity() {
         })
 
 
-
         //youtube player
         utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
         if (videoId != null) {
@@ -167,20 +167,49 @@ class PlayerActivity : YouTubeBaseActivity() {
         }
 
         //button expand
-        val btn_expand = findViewById<Button>(R.id.btn_expand)
+        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
         val cardView = findViewById<CardView>(R.id.cardView)
         val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
         btn_expand.setOnClickListener {
             if (expandableLayout.visibility == View.GONE) {
                 TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                 expandableLayout.visibility = View.VISIBLE
-                btn_expand.text = "COLLAPSE"
+                btn_expand.setImageResource(R.drawable.ic_arrow_up)
             } else {
                 TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                 expandableLayout.visibility = View.GONE
-                btn_expand.text = "EXPAND"
+//                btn_expand.text = "EXPAND"
+                btn_expand.setImageResource(R.drawable.ic_arrow_down)
             }
         }
+
+        //call comment from videoId
+        val recyclerViewCmt = findViewById<RecyclerView>(R.id.rcv_comment)
+        val requestComment = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+        val callComment = requestComment.getComment(
+            "snippet",
+            20,
+            "plainText",
+            videoId,
+            "relevance",
+            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+        )
+        callComment.enqueue(object : Callback<CommentData> {
+            override fun onResponse(call: Call<CommentData>, response: Response<CommentData>) {
+                recyclerViewCmt.apply {
+                    setHasFixedSize(true)
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    adapter = CommentAdapter(response.body()!!.items, this@PlayerActivity)
+                }
+            }
+
+            override fun onFailure(call: Call<CommentData>, t: Throwable) {
+                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
     }
 
     private fun intilizePlayer(videoId: String) {

@@ -52,4 +52,15 @@ interface YoutubeEndpoints {
         @Query("maxResults") maxResults : Int,
         @Query("key") key: String
     ): Call<RelatedData>
+
+    @GET("commentThreads")
+    fun getComment(
+        @Query("part") part: String,
+        @Query("maxResults") maxResults : Int,
+        @Query("textFormat") textFormat : String,
+        @Query("videoId") videoId : String,
+        @Query("order") order: String,
+        @Query("key") key: String
+    ): Call<CommentData>
+
 }
