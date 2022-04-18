@@ -140,7 +140,7 @@ class PlayerActivity : YouTubeBaseActivity() {
             "snippet",
             videoId,
             "video",
-            20,
+            30,
             "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
         )
         callRelated.enqueue(object : Callback<RelatedData> {
@@ -188,7 +188,7 @@ class PlayerActivity : YouTubeBaseActivity() {
         val requestComment = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
         val callComment = requestComment.getComment(
             "snippet",
-            20,
+            40,
             "plainText",
             videoId,
             "relevance",

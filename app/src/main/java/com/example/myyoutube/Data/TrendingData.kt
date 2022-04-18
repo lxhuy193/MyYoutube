@@ -52,7 +52,8 @@ data class TrendThumbnail(
 
 data class TrendDefault(
     val url: String,
-    val width: Int, val height: Int
+    val width: Int,
+    val height: Int
 )
 
 data class TrendMedium(

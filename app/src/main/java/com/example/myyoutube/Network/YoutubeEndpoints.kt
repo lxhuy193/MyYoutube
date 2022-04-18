@@ -63,4 +63,11 @@ interface YoutubeEndpoints {
         @Query("key") key: String
     ): Call<CommentData>
 
+    @GET("search")
+    fun getSearch(
+        @Query("part") part: String,
+        @Query("maxResults") maxResults : Int,
+        @Query("q") q : String,
+        @Query("key") key: String
+    ): Call<SearchData>
 }
