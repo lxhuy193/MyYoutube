@@ -5,7 +5,6 @@ import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,18 +12,16 @@ import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.*
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
+import com.example.myyoutube.adapter.CommentAdapter
+import com.example.myyoutube.adapter.PlayerAdapter
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
-import com.skydoves.expandablelayout.ExpandableLayout
-import com.skydoves.expandablelayout.expandableLayout
 import de.hdodenhof.circleimageview.CircleImageView
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.regex.Pattern
 
 class PlayerActivity : YouTubeBaseActivity() {
     lateinit var utubePlayer: YouTubePlayerView

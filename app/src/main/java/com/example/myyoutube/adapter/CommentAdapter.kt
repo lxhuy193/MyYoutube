@@ -1,4 +1,4 @@
-package com.example.myyoutube
+package com.example.myyoutube.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.CommentItem
+import com.example.myyoutube.R
 import de.hdodenhof.circleimageview.CircleImageView
 
 class CommentAdapter(val commentItems: List<CommentItem>, val context: Context) :
@@ -20,11 +21,11 @@ class CommentAdapter(val commentItems: List<CommentItem>, val context: Context) 
         val tv_cmtCount = view.findViewById<TextView>(R.id.tv_cmtCount)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentAdapter.VH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false))
     }
 
-    override fun onBindViewHolder(holder: CommentAdapter.VH, position: Int) {
+    override fun onBindViewHolder(holder: VH, position: Int) {
         Glide.with(holder.itemView.context)
             .load(commentItems[position].snippet.topLevelComment.snippet.authorProfileImageUrl)
             .into(holder.civ_userThumnail)

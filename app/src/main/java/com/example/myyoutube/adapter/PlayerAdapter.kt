@@ -1,4 +1,4 @@
-package com.example.myyoutube
+package com.example.myyoutube.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.*
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
-import com.google.android.youtube.player.internal.i
-import com.google.android.youtube.player.internal.n
+import com.example.myyoutube.PlayerActivity
+import com.example.myyoutube.R
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback

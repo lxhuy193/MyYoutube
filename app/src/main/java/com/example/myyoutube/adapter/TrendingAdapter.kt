@@ -1,4 +1,4 @@
-package com.example.myyoutube
+package com.example.myyoutube.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -10,19 +10,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.ChannelDetail
-import com.example.myyoutube.Data.ChannelItem
 import com.example.myyoutube.Data.TrendItem
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
+import com.example.myyoutube.PlayerActivity
+import com.example.myyoutube.R
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.nio.channels.Channel
 
 
-class MainAdapter(val trendItems: List<TrendItem>, val context: Context) :
-    RecyclerView.Adapter<MainAdapter.VH>() {
+class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
+    RecyclerView.Adapter<TrendingAdapter.VH>() {
     var onItemClick: ((TrendItem) -> Unit)? = null
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
