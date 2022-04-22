@@ -1,4 +1,4 @@
-package com.example.myyoutube
+package com.example.myyoutube.activity
 
 import android.os.Bundle
 import android.transition.AutoTransition
@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.*
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
+import com.example.myyoutube.R
 import com.example.myyoutube.adapter.CommentAdapter
 import com.example.myyoutube.adapter.PlayerAdapter
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -64,7 +65,7 @@ class PlayerActivity : YouTubeBaseActivity() {
         val callDescrip = requestDescrip.getVideoDetail(
             "snippet",
             videoId,
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
         )
         callDescrip.enqueue(object : Callback<TrendFeed> {
             override fun onResponse(call: Call<TrendFeed>, response: Response<TrendFeed>) {
@@ -85,7 +86,7 @@ class PlayerActivity : YouTubeBaseActivity() {
         val callSubs = requestSubs.getChannelStatistics(
             "statistics",
             channelId,
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
         )
         callSubs.enqueue(object : Callback<ChannelStatistics> {
             override fun onResponse(
@@ -109,7 +110,7 @@ class PlayerActivity : YouTubeBaseActivity() {
         val callViewLike = requestViewLike.getVideoViewLikeCmt(
             "statistics",
             videoId,
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
         )
         callViewLike.enqueue(object : Callback<VideoPlayerData> {
             override fun onResponse(
@@ -138,7 +139,7 @@ class PlayerActivity : YouTubeBaseActivity() {
             videoId,
             "video",
             30,
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
         )
         callRelated.enqueue(object : Callback<RelatedData> {
             override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
@@ -189,7 +190,7 @@ class PlayerActivity : YouTubeBaseActivity() {
             "plainText",
             videoId,
             "relevance",
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U"
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
         )
         callComment.enqueue(object : Callback<CommentData> {
             override fun onResponse(call: Call<CommentData>, response: Response<CommentData>) {
@@ -211,7 +212,7 @@ class PlayerActivity : YouTubeBaseActivity() {
 
     private fun intilizePlayer(videoId: String) {
         utubePlayer.initialize(
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U",
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
             object : YouTubePlayer.OnInitializedListener {
                 override fun onInitializationSuccess(
                     p0: YouTubePlayer.Provider?,

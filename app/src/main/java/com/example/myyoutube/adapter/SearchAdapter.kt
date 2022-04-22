@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.ChannelDetail
+import com.example.myyoutube.Data.SearchItem
 import com.example.myyoutube.Data.TrendItem
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
@@ -21,8 +22,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
-    RecyclerView.Adapter<TrendingAdapter.VH>() {
+class SearchAdapter(val searchItem: List<SearchItem>, val context: Context) :
+    RecyclerView.Adapter<SearchAdapter.VH>() {
     var onItemClick: ((TrendItem) -> Unit)? = null
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
@@ -30,32 +31,6 @@ class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
         val tv_videoTitle = view.findViewById<TextView>(R.id.tv_videoTitle)
         val civ_channelImage = view.findViewById<CircleImageView>(R.id.civ_channelImage)
         val tv_channelTitle = view.findViewById<TextView>(R.id.tv_channelTitle)
-
-//        fun bind(trendItem: TrendItem) {
-//            Glide.with(itemView.context).load(trendItem.snippet.thumbnails.high.url).into(iv_thumbNail)
-//            tv_videoTitle.text = trendItem.snippet.title
-
-//            val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-//            val call = request.getChannel("snippet", "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U", "UCzw-C7fNfs018R1FzIKnlaA")
-//            call.enqueue(object : Callback<ChannelDetail>{
-//                override fun onResponse(
-//                    call: Call<ChannelDetail>,
-//                    response: Response<ChannelDetail>
-//                ) {
-//                    if (response.isSuccessful){
-//                        val body = response.body()
-//                        println(body.toString())
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
-//                    println("aaaaa" + t)
-//                }
-//
-//            })
-//        }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -71,7 +46,7 @@ class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
         val call = request.getChannel(
             "snippet",
             "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-            trendItems[position].snippet.channelId
+            searchItem[position].snippet.channelId
         )
         call.enqueue(object : Callback<ChannelDetail> {
             override fun onResponse(
@@ -94,24 +69,24 @@ class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
         })
 
         //video title + video thumbnail main activity
-        Glide.with(holder.itemView.context).load(trendItems[position].snippet.thumbnails.high.url)
+        Glide.with(holder.itemView.context).load(searchItem[position].snippet.thumbnails.high.url)
             .into(holder.iv_thumbNail)
-        holder.tv_videoTitle.text = trendItems[position].snippet.title
+        holder.tv_videoTitle.text = searchItem[position].snippet.title
 
         //intent pass video title + channel thumbnail + channel title
         holder.itemView.setOnClickListener { v: View ->
             Unit
             val intent = Intent(context, PlayerActivity::class.java)
             //video id for youtube player
-            intent.putExtra("videoId", trendItems[position].id)
-            intent.putExtra("videoTitle", trendItems[position].snippet.title)
+            intent.putExtra("videoId", searchItem[position].id.videoId)
+            intent.putExtra("videoTitle", searchItem[position].snippet.title)
 
             //call channelThumbnail, channelTitle, channelSubscribes to put Intent
             val requestItent = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
             val callItent = requestItent.getChannel(
                 "snippet",
                 "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-                trendItems[position].snippet.channelId
+                searchItem[position].snippet.channelId
             )
 
             callItent.enqueue(object : Callback<ChannelDetail> {
@@ -150,7 +125,7 @@ class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
     }
 
     override fun getItemCount(): Int {
-        return trendItems.size
+        return searchItem.size
     }
 
 }

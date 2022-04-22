@@ -38,7 +38,7 @@ class TrendingNewsFragment : Fragment() {
             "snippet",
             20,
             "mostPopular",
-            "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U",
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
             "VN",
             25
         )

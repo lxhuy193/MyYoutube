@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.*
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
-import com.example.myyoutube.PlayerActivity
+import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
@@ -46,7 +46,7 @@ class PlayerAdapter(val relatedItem: List<RelatedItem>, val context: Context) :
             val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
             val call = request.getChannel(
                 "snippet",
-                "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U",
+                "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
                 relatedItem[position].snippet.channelId
             )
             call.enqueue(object : Callback<ChannelDetail> {
@@ -77,7 +77,7 @@ class PlayerAdapter(val relatedItem: List<RelatedItem>, val context: Context) :
                 val requestItent = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
                 val callItent = requestItent.getChannel(
                     "snippet",
-                    "AIzaSyD9pbOdvK1sevSbG7GXmIRfwMmiHm4J23U",
+                    "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
                     relatedItem[position].snippet.channelId
                 )
 
