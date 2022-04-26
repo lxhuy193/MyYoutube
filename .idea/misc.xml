@@ -21,7 +21,7 @@
         <entry key="app/src/main/res/layout/fragment_trending_music.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/fragment_trending_news.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/item_comment.xml" value="0.2164855072463768" />
-        <entry key="app/src/main/res/layout/item_related.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_related.xml" value="0.165" />
         <entry key="app/src/main/res/layout/item_trending.xml" value="0.16893115942028986" />
         <entry key="app/src/main/res/menu/menu_options.xml" value="0.2604166666666667" />
         <entry key="app/src/main/res/menu/menu_options_search.xml" value="0.1921875" />

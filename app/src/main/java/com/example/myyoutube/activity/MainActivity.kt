@@ -13,7 +13,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.viewpager.widget.ViewPager
 import com.example.myyoutube.R
 import com.example.myyoutube.adapter.ViewPagerAdapter
+import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 import com.google.android.material.tabs.TabLayout
+import org.schabi.newpipe.extractor.Extractor
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,7 +74,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
+
         return super.onOptionsItemSelected(item)
     }
+
 
 }

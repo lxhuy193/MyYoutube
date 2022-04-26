@@ -54,13 +54,16 @@ class SearchActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.clearFocus()
-                searchView.setQuery("", false)
+//                searchView.setQuery("", false)
                 searchItem.collapseActionView()
                 println("bbbbb " + query)
 //                val intent = Intent(this@2SearchActivity, SearchActivity::class.java)
 //                intent.putExtra("searchKey", query)
 //                startActivity(intent)
-                callApi(query!!)
+
+                if (query != null) {
+                    callApi(query)
+                }
                 return true
             }
 
@@ -86,18 +89,23 @@ class SearchActivity : AppCompatActivity() {
         val call = request.getSearch(
             "snippet",
             20,
-            keyWord,
+            "Hello",
             "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
         )
 
         call.enqueue(object : Callback<SearchData> {
             override fun onResponse(call: Call<SearchData>, response: Response<SearchData>) {
                 progressBar.visibility = View.GONE
-                println("zzzzz " + response.body()!!)
+                if(response.body() == null) println("nullllll")
+//                else println("resultlttt: " + response.body())
+//                println("zzzzz " + response.body()!!)
                 recyclerView.apply {
                     setHasFixedSize(true)
                     layoutManager = LinearLayoutManager(this@SearchActivity)
-                    adapter = SearchAdapter(response.body()!!.items, this@SearchActivity)
+                    if (response.body() != null){
+                        println()
+                        adapter = SearchAdapter(response.body()!!.items, this@SearchActivity)
+                    }
                 }
             }
 

@@ -50,7 +50,7 @@ class TrendingGamesFragment : Fragment() {
                     recyclerView.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(activity)
-                        adapter = TrendingAdapter(response.body()!!.items, context)
+//                        adapter = TrendingAdapter(response.body()!!.items, context)
                     }
                 }
             }

@@ -33,6 +33,8 @@ android {
 
 dependencies {
 
+    implementation "com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751"
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -67,4 +69,10 @@ dependencies {
     implementation "com.github.skydoves:expandablelayout:1.0.7"
     //expandable cardview
 //    implementation "com.alespero:expandable-cardview:0.8"
+
+    implementation "io.reactivex.rxjava3:rxjava:3.0.7"
+    implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
+
+    implementation project(path:':extractor')
+
 }

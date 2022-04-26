@@ -15,13 +15,15 @@ import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
+import com.google.android.youtube.player.internal.v
 import de.hdodenhof.circleimageview.CircleImageView
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
+class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context) :
     RecyclerView.Adapter<TrendingAdapter.VH>() {
     var onItemClick: ((TrendItem) -> Unit)? = null
 
@@ -65,87 +67,114 @@ class TrendingAdapter(val trendItems: List<TrendItem>, val context: Context) :
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-
-        //channel thumbnail + channel title
-        val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-        val call = request.getChannel(
-            "snippet",
-            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-            trendItems[position].snippet.channelId
-        )
-        call.enqueue(object : Callback<ChannelDetail> {
-            override fun onResponse(
-                call: Call<ChannelDetail>,
-                response: Response<ChannelDetail>
-            ) {
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    Glide.with(holder.itemView.context)
-                        .load(body!!.items[0].snippet.thumbnails.high.url)
-                        .into(holder.civ_channelImage)
-                    holder.tv_channelTitle.text = body!!.items[0].snippet.title
-                }
-            }
-
-            override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
-                println("aaaaa" + t)
-            }
-
-        })
-
-        //video title + video thumbnail main activity
-        Glide.with(holder.itemView.context).load(trendItems[position].snippet.thumbnails.high.url)
+        Glide.with(holder.itemView.context).load(trendItems[position].thumbnailUrl)
             .into(holder.iv_thumbNail)
-        holder.tv_videoTitle.text = trendItems[position].snippet.title
+        Glide.with(holder.itemView.context).load(trendItems[position].uploaderAvatarUrl)
+            .into(holder.civ_channelImage)
+        holder.tv_videoTitle.text = trendItems[position].name
+        holder.tv_channelTitle.text = trendItems[position].uploaderName
 
-        //intent pass video title + channel thumbnail + channel title
-        holder.itemView.setOnClickListener { v: View ->
+        //get VideoId + videoView + channelThumbnail + channelName
+        val videoId = trendItems[position].url.substringAfterLast("=")
+        val videoView = trendItems[position].viewCount
+        val videoDate = trendItems[position].textualUploadDate
+        val channelThumbnail = trendItems[position].uploaderAvatarUrl
+        val channelName = trendItems[position].uploaderName
+
+        holder.itemView.setOnClickListener { v : View ->
             Unit
-            val intent = Intent(context, PlayerActivity::class.java)
-            //video id for youtube player
-            intent.putExtra("videoId", trendItems[position].id)
-            intent.putExtra("videoTitle", trendItems[position].snippet.title)
-
-            //call channelThumbnail, channelTitle, channelSubscribes to put Intent
-            val requestItent = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-            val callItent = requestItent.getChannel(
-                "snippet",
-                "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-                trendItems[position].snippet.channelId
-            )
-
-            callItent.enqueue(object : Callback<ChannelDetail> {
-
-                override fun onResponse(
-                    call: Call<ChannelDetail>,
-                    response: Response<ChannelDetail>
-                ) {
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        intent.putExtra(
-                            "channelThumbnail",
-                            body!!.items[0].snippet.thumbnails.high.url
-                        )
-                        intent.putExtra(
-                            "channelTitle",
-                            body!!.items[0].snippet.title
-                        )
-                        intent.putExtra(
-                            "channelId",
-                            body!!.items[0].id
-                        )
-
-                        context.startActivity(intent)
-                    }
-                }
-
-                override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
-                    println("aaaaa" + t)
-                }
-
-            })
+            val intent = Intent (context, PlayerActivity::class.java)
+            intent.putExtra("videoId", videoId)
+            intent.putExtra("videoView", videoView)
+            intent.putExtra("videoTitle", trendItems[position].name)
+            intent.putExtra("videoDate", videoDate)
+            intent.putExtra("channelThumbnail", channelThumbnail)
+            intent.putExtra("channelName", channelName)
+            context.startActivity(intent)
 
         }
+
+
+//        //channel thumbnail + channel title
+//        val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+//        val call = request.getChannel(
+//            "snippet",
+//            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
+//            trendItems[position].snippet.channelId
+//        )
+//        call.enqueue(object : Callback<ChannelDetail> {
+//            override fun onResponse(
+//                call: Call<ChannelDetail>,
+//                response: Response<ChannelDetail>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val body = response.body()
+//                    Glide.with(holder.itemView.context)
+//                        .load(body!!.items[0].snippet.thumbnails.high.url)
+//                        .into(holder.civ_channelImage)
+//                    holder.tv_channelTitle.text = body!!.items[0].snippet.title
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
+//                println("aaaaa" + t)
+//            }
+//
+//        })
+//
+//        //video title + video thumbnail main activity
+//        Glide.with(holder.itemView.context).load(trendItems[position].snippet.thumbnails.high.url)
+//            .into(holder.iv_thumbNail)
+//        holder.tv_videoTitle.text = trendItems[position].snippet.title
+//
+//        //intent pass video title + channel thumbnail + channel title
+//        holder.itemView.setOnClickListener { v: View ->
+//            Unit
+//            val intent = Intent(context, PlayerActivity::class.java)
+//            //video id for youtube player
+//            intent.putExtra("videoId", trendItems[position].id)
+//            intent.putExtra("videoTitle", trendItems[position].snippet.title)
+//
+//            //call channelThumbnail, channelTitle, channelSubscribes to put Intent
+//            val requestItent = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+//            val callItent = requestItent.getChannel(
+//                "snippet",
+//                "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
+//                trendItems[position].snippet.channelId
+//            )
+//
+//            callItent.enqueue(object : Callback<ChannelDetail> {
+//
+//                override fun onResponse(
+//                    call: Call<ChannelDetail>,
+//                    response: Response<ChannelDetail>
+//                ) {
+//                    if (response.isSuccessful) {
+//                        val body = response.body()
+//                        intent.putExtra(
+//                            "channelThumbnail",
+//                            body!!.items[0].snippet.thumbnails.high.url
+//                        )
+//                        intent.putExtra(
+//                            "channelTitle",
+//                            body!!.items[0].snippet.title
+//                        )
+//                        intent.putExtra(
+//                            "channelId",
+//                            body!!.items[0].id
+//                        )
+//
+//                        context.startActivity(intent)
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
+//                    println("aaaaa" + t)
+//                }
+//
+//            })
+//
+//        }
 
     }
 
