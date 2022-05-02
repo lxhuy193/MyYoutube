@@ -1,119 +1,186 @@
 package com.example.myyoutube.activity
 
-import android.app.SearchManager
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
-import android.widget.LinearLayout
+import android.view.inputmethod.EditorInfo
+import android.widget.ImageButton
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myyoutube.Data.SearchData
-import com.example.myyoutube.Data.SearchItem
-import com.example.myyoutube.Data.TrendFeed
-import com.example.myyoutube.Network.ServiceBuilder
-import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.R
 import com.example.myyoutube.adapter.SearchAdapter
 import com.example.myyoutube.adapter.TrendingAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.myyoutube.newpipeExtracter.ExtractorHelper
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.youtube.player.internal.z
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import org.schabi.newpipe.extractor.kiosk.KioskInfo
+import org.schabi.newpipe.extractor.search.SearchInfo
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class SearchActivity : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
     lateinit var recyclerView: RecyclerView
+    lateinit var toolBar: Toolbar
+    lateinit var imgBtn: ImageButton
+    lateinit var textInputLayout: TextInputLayout
+    lateinit var tiet_search: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        progressBar = findViewById(R.id.progressBarSearch)
+//        progressBar = findViewById(R.id.progressBarSearch)
         recyclerView = findViewById(R.id.recyclerViewSearch)
+        toolBar = findViewById(R.id.toolBar)
+        imgBtn = findViewById(R.id.imgBtn)
+        textInputLayout = findViewById(R.id.textInputLayout)
+        tiet_search = findViewById(R.id.tiet_search)
 
-        //CHANGE TITLE
-        val actionBar = supportActionBar
-        actionBar!!.title = "Results"
-        actionBar.setDisplayHomeAsUpEnabled(true)
-    }
+        //BACK NAVIGATION
+        imgBtn.setOnClickListener {
+            finish()
+        }
 
-    //DISPLAY CONFIGURATION MENU
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_options_search, menu)
-        val searchItem = menu?.findItem(R.id.menu_search_activity)
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = searchItem?.actionView as SearchView
+        //HIDE ACTION BAR
+        supportActionBar?.hide()
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-//                searchView.setQuery("", false)
-                searchItem.collapseActionView()
-                println("bbbbb " + query)
-//                val intent = Intent(this@2SearchActivity, SearchActivity::class.java)
-//                intent.putExtra("searchKey", query)
-//                startActivity(intent)
+        tiet_search.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                if (query != null) {
-                    callApi(query)
-                }
-                return true
+                println("lxhuy1 " + s.toString())
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+                println("lxhuy2 " + s.toString())
             }
 
-        })
-//        return super.onCreateOptionsMenu(menu)
-        return true
-    }
+            override fun afterTextChanged(s: Editable) {
+                println("lxhuy3 " + s.toString())
+                tiet_search.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+                    override fun onEditorAction(
+                        v: TextView?,
+                        actionId: Int,
+                        event: KeyEvent?
+                    ): Boolean {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-    // NAVIGATION BACK ON ACTION BAR
-    override fun onSupportNavigateUp(): Boolean {
-//        return super.onSupportNavigateUp()
-        onBackPressed()
-        finish()
-        return true
-    }
+                            ExtractorHelper.searchFor(
+                                0,
+                                s.toString(),
+                                arrayOfNulls<String>(0).filterNotNull(),
+                                ""
+                            )
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe { result: SearchInfo ->
+                                    recyclerView.apply {
+                                        setHasFixedSize(true)
+                                        layoutManager = LinearLayoutManager(context)
+                                        adapter = SearchAdapter(result.relatedItems, context)
+                                    }
+                                    println("linh " + result.relatedItems)
+                                }
 
-    fun callApi(keyWord: String) {
-        val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-        val call = request.getSearch(
-            "snippet",
-            20,
-            "Hello",
-            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
-        )
-
-        call.enqueue(object : Callback<SearchData> {
-            override fun onResponse(call: Call<SearchData>, response: Response<SearchData>) {
-                progressBar.visibility = View.GONE
-                if(response.body() == null) println("nullllll")
-//                else println("resultlttt: " + response.body())
-//                println("zzzzz " + response.body()!!)
-                recyclerView.apply {
-                    setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(this@SearchActivity)
-                    if (response.body() != null){
-                        println()
-                        adapter = SearchAdapter(response.body()!!.items, this@SearchActivity)
+                            return true
+                        }
+                        return false
                     }
-                }
-            }
-
-            override fun onFailure(call: Call<SearchData>, t: Throwable) {
-                Toast.makeText(this@SearchActivity, "Fail", Toast.LENGTH_SHORT).show()
+                })
             }
 
         })
+
     }
 
+
+//    // NAVIGATION BACK ON ACTION BAR
+//    override fun onSupportNavigateUp(): Boolean {
+//        return super.onSupportNavigateUp()
+//        onBackPressed()
+//        finish()
+//        return true
+//    }
+
+    //        //CHANGE TITLE IN ONCREATE
+//        val actionBar = supportActionBar
+//        actionBar!!.title = "Results"
+//        actionBar.setDisplayHomeAsUpEnabled(true)
+
+//    //DISPLAY CONFIGURATION MENU
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_options_search, menu)
+//        val searchItem = menu?.findItem(R.id.menu_search_activity)
+//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val searchView = searchItem?.actionView as SearchView
+//
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+//
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                searchView.clearFocus()
+////                searchView.setQuery("", false)
+//                searchItem.collapseActionView()
+//                println("bbbbb " + query)
+////                val intent = Intent(this@2SearchActivity, SearchActivity::class.java)
+////                intent.putExtra("searchKey", query)
+////                startActivity(intent)
+//
+//                if (query != null) {
+//                    callApi(query)
+//                }
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//
+//        })
+////        return super.onCreateOptionsMenu(menu)
+//        return true
+//    }
+
+//
+//    fun callApi(keyWord: String) {
+//        val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+//        val call = request.getSearch(
+//            "snippet",
+//            20,
+//            "Hello",
+//            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
+//        )
+
+//        call.enqueue(object : Callback<SearchData> {
+//            override fun onResponse(call: Call<SearchData>, response: Response<SearchData>) {
+//                progressBar.visibility = View.GONE
+//                if(response.body() == null) println("nullllll")
+////                else println("resultlttt: " + response.body())
+////                println("zzzzz " + response.body()!!)
+//                recyclerView.apply {
+//                    setHasFixedSize(true)
+//                    layoutManager = LinearLayoutManager(this@SearchActivity)
+//                    if (response.body() != null){
+//                        println()
+//                        adapter = SearchAdapter(response.body()!!.items, this@SearchActivity)
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<SearchData>, t: Throwable) {
+//                Toast.makeText(this@SearchActivity, "Fail", Toast.LENGTH_SHORT).show()
+//            }
+//
+//        })
+//    }
 }

@@ -2,6 +2,7 @@ package com.example.myyoutube.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +16,17 @@ import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
+import com.example.myyoutube.newpipeExtracter.ExtractorHelper
+import com.google.android.youtube.player.internal.i
+import com.google.android.youtube.player.internal.r
 import com.google.android.youtube.player.internal.v
 import de.hdodenhof.circleimageview.CircleImageView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers.io
+import org.schabi.newpipe.extractor.playlist.PlaylistInfo
+import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import retrofit2.Call
 import retrofit2.Callback
@@ -81,16 +91,44 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
         val channelThumbnail = trendItems[position].uploaderAvatarUrl
         val channelName = trendItems[position].uploaderName
 
-        holder.itemView.setOnClickListener { v : View ->
+
+        holder.itemView.setOnClickListener { v: View ->
             Unit
-            val intent = Intent (context, PlayerActivity::class.java)
+            //short description used for demo description before expand
+            Log.i("heyhey", trendItems[position].shortDescription)
+
+            val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra("videoId", videoId)
-            intent.putExtra("videoView", videoView)
             intent.putExtra("videoTitle", trendItems[position].name)
             intent.putExtra("videoDate", videoDate)
             intent.putExtra("channelThumbnail", channelThumbnail)
             intent.putExtra("channelName", channelName)
-            context.startActivity(intent)
+
+            ExtractorHelper.getStreamInfo(0, trendItems[position].url, false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result: StreamInfo ->
+                    Log.i("huyhuy ", result.description.content)
+                    intent.putExtra("videoDescrip", result.description.content)
+                    intent.putExtra("videoLike", result.likeCount.toString())
+                    intent.putExtra("videoView", result.viewCount.toString())
+                    context.startActivity(intent)
+
+                }) { throwable: Throwable ->
+                    println("erorrrr call description failed")
+                }
+
+            ExtractorHelper.getPlaylistInfo(0, trendItems[position].url, false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ results: PlaylistInfo ->
+                    Log.i("huyhuy2 ", results.relatedItems[0].name)
+//                    intent.putExtra("videoDescrip", result.description.content)
+//                    intent.putExtra("videoLike", result.likeCount.toString())
+//                    context.startActivity(intent)
+                }) { throwable: Throwable ->
+                    println("erorrrr call playlist failed")
+                }
 
         }
 

@@ -5,6 +5,8 @@ import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.Page;
+import org.schabi.newpipe.extractor.comments.CommentsInfo;
+import org.schabi.newpipe.extractor.comments.CommentsInfoItem;
 import org.schabi.newpipe.extractor.kiosk.KioskInfo;
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo;
 import org.schabi.newpipe.extractor.search.SearchInfo;
@@ -84,6 +86,23 @@ public final class ExtractorHelper {
                     ? extractor.suggestionList(query)
                     : Collections.emptyList();
         });
+    }
+
+    public static Single<CommentsInfo> getCommentsInfo(final int serviceId, final String url,
+                                                       final boolean forceLoad) {
+        checkServiceId(serviceId);
+        return checkCache(forceLoad, serviceId, url, InfoItem.InfoType.COMMENT,
+                Single.fromCallable(() ->
+                        CommentsInfo.getInfo(NewPipe.getService(serviceId), url)));
+    }
+
+    public static Single<ListExtractor.InfoItemsPage<CommentsInfoItem>> getMoreCommentItems(
+            final int serviceId,
+            final CommentsInfo info,
+            final Page nextPage) {
+        checkServiceId(serviceId);
+        return Single.fromCallable(() ->
+                CommentsInfo.getMoreItems(NewPipe.getService(serviceId), info, nextPage));
     }
 
 

@@ -62,11 +62,10 @@ class MainActivity : AppCompatActivity() {
 //                return false
 //            }
 //        })
-
         return true
     }
 
-    //INTENT TO SEARCH ACTIVITY
+    //INTENT TO SEARCH FRAGMENT
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) {
             Toast.makeText(this, "Click search item", Toast.LENGTH_SHORT).show()
@@ -74,9 +73,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
-
         return super.onOptionsItemSelected(item)
     }
-
 
 }

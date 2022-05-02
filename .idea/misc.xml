@@ -13,9 +13,11 @@
         <entry key="app/src/main/res/drawable/ic_thumb_up_24.xml" value="0.106" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16893115942028986" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_search.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_search.xml" value="0.25" />
         <entry key="app/src/main/res/layout/expandable_videodis.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/expandable_videotitle.xml" value="0.19479166666666667" />
+        <entry key="app/src/main/res/layout/fragment_random.xml" value="0.20094057289439932" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.125" />
         <entry key="app/src/main/res/layout/fragment_trending.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/fragment_trending_games.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/fragment_trending_music.xml" value="0.20244565217391305" />

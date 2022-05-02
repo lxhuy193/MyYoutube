@@ -11,37 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:elevation="0dp"-->
-<!--            style="@style/Widget.MaterialComponents.Toolbar.Primary"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:backgroundTint="#FF0000"-->
-<!--            app:menu="@menu/menu_options">-->
+        <!--        <androidx.appcompat.widget.Toolbar-->
+        <!--            android:elevation="0dp"-->
+        <!--            style="@style/Widget.MaterialComponents.Toolbar.Primary"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="?attr/actionBarSize"-->
+        <!--            android:backgroundTint="#FF0000"-->
+        <!--            app:menu="@menu/menu_options">-->
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="My Youtube"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="24dp"-->
-<!--                android:textStyle="bold" />-->
-<!--        </androidx.appcompat.widget.Toolbar>-->
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="My Youtube"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="24dp"-->
+        <!--                android:textStyle="bold" />-->
+        <!--        </androidx.appcompat.widget.Toolbar>-->
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_main"
-            app:tabIndicatorColor="@color/white"
-            android:background="#FF0000"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="#FF0000"
+            app:tabIndicatorColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </androidx.viewpager.widget.ViewPager>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

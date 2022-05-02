@@ -50,7 +50,7 @@ class TrendingMusicFragment : Fragment() {
                     layoutManager = LinearLayoutManager(activity)
                     adapter = TrendingAdapter(result.relatedItems, context)
                 }
-                println(result.relatedItems)
+                println("linh 2" + result.relatedItems)
             }) { throwable: Throwable ->
                 println("aaaaa")
             }

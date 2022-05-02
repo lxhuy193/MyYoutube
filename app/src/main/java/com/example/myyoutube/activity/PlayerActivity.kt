@@ -50,11 +50,21 @@ class PlayerActivity : YouTubeBaseActivity() {
         tv_videoTitlePlayer = findViewById(R.id.tv_videoTitlePlayer)
         tv_videoTitlePlayer.text = intent.getStringExtra("videoTitle")
 
+        tv_videoViewPlayer = findViewById(R.id.tv_videoViewPlayer)
+        tv_videoViewPlayer.text = intent.getStringExtra("videoView").toString()
+
         tv_videoDatePlayer = findViewById(R.id.tv_videoDatePlayer)
         tv_videoDatePlayer.text = intent.getStringExtra("videoDate")
 
+        tv_videoDescripPlayer = findViewById(R.id.tv_videoDescripPlayer)
+        tv_videoDescripPlayer.text = intent.getStringExtra("videoDescrip")
+
+        tv_videoLikePlayer = findViewById(R.id.tv_videoLikePlayer)
+        tv_videoLikePlayer.text = intent.getStringExtra("videoLike")
+
         tv_channelTitlePlayer = findViewById(R.id.tv_channelTitlePlayer)
         tv_channelTitlePlayer.text = intent.getStringExtra("channelName")
+
 //
 //        tv_channelSubscribes = findViewById(R.id.tv_channelSubscribes)
 //        val channelId = intent.getStringExtra("channelId").toString()
@@ -136,48 +146,48 @@ class PlayerActivity : YouTubeBaseActivity() {
 //
 //        })
 //
-//        //call related video by videoId
-//        val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-//        val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-//        val callRelated = requestRelated.getRelatedVideo(
-//            "snippet",
-//            videoId,
-//            "video",
-//            30,
-//            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
-//        )
-//        callRelated.enqueue(object : Callback<RelatedData> {
-//            override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
-//                recyclerView.apply {
-//                    setHasFixedSize(true)
-//                    layoutManager =
-//                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//                    adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<RelatedData>, t: Throwable) {
-//                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
-//            }
-//
-//        })
+        //call related video by videoId
+        val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+        val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+        val callRelated = requestRelated.getRelatedVideo(
+            "snippet",
+            videoId,
+            "video",
+            5,
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
+        )
+        callRelated.enqueue(object : Callback<RelatedData> {
+            override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
+                recyclerView.apply {
+                    setHasFixedSize(true)
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
+                }
+            }
 
-        //        //button expand
-//        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
-//        val cardView = findViewById<CardView>(R.id.cardView)
-//        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
-//        btn_expand.setOnClickListener {
-//            if (expandableLayout.visibility == View.GONE) {
-//                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-//                expandableLayout.visibility = View.VISIBLE
-//                btn_expand.setImageResource(R.drawable.ic_arrow_up)
-//            } else {
-//                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-//                expandableLayout.visibility = View.GONE
-////                btn_expand.text = "EXPAND"
-//                btn_expand.setImageResource(R.drawable.ic_arrow_down)
-//            }
-//        }
+            override fun onFailure(call: Call<RelatedData>, t: Throwable) {
+                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+                //button expand
+        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
+        val cardView = findViewById<CardView>(R.id.cardView)
+        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
+        btn_expand.setOnClickListener {
+            if (expandableLayout.visibility == View.GONE) {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.VISIBLE
+                btn_expand.setImageResource(R.drawable.ic_arrow_up)
+            } else {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.GONE
+//                btn_expand.text = "EXPAND"
+                btn_expand.setImageResource(R.drawable.ic_arrow_down)
+            }
+        }
 //
 //        //call comment from videoId
 //        val recyclerViewCmt = findViewById<RecyclerView>(R.id.rcv_comment)
