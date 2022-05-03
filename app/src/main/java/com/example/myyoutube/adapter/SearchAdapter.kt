@@ -63,6 +63,7 @@ class SearchAdapter(val searchItem: List<InfoItem>, val context: Context) :
         val videoTitle = item.name
         val channelThumbnail = item.uploaderAvatarUrl
         val channelName = item.uploaderName
+        ///
 
 
         holder.itemView.setOnClickListener { v: View ->
