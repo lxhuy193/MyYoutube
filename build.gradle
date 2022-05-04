@@ -30,5 +30,8 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        maven {
+            url 'https://dl.bintray.com/dptsolutions/maven/'
+        }
     }
 }

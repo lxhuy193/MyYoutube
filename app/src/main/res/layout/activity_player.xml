@@ -16,6 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <ImageButton
+            android:id="@+id/imgBtn_pip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_picture_in_picture_24" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
@@ -55,10 +64,10 @@
                             android:layout_gravity="center" />
 
                         <LinearLayout
-                            android:layout_marginStart="4dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
                             android:orientation="vertical">
 
                             <TextView

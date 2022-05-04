@@ -108,14 +108,14 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result: StreamInfo ->
-                    Log.i("huyhuy ", result.description.content)
+//                    Log.i("huyhuy ", result.description.content)
                     intent.putExtra("videoDescrip", result.description.content)
                     intent.putExtra("videoLike", result.likeCount.toString())
                     intent.putExtra("videoView", result.viewCount.toString())
                     context.startActivity(intent)
 
                 }) { throwable: Throwable ->
-                    println("erorrrr call description failed")
+//                    println("erorrrr call description failed")
                 }
 
             ExtractorHelper.getPlaylistInfo(0, trendItems[position].url, false)

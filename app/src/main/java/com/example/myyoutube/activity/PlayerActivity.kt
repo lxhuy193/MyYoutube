@@ -1,8 +1,14 @@
 package com.example.myyoutube.activity
 
+import android.app.PictureInPictureParams
+import android.content.Intent
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
+import android.util.Rational
 import android.view.View
 import android.widget.*
 import androidx.cardview.widget.CardView
@@ -25,6 +31,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class PlayerActivity : YouTubeBaseActivity() {
+    private val TAG: String = "PIP_TAG"
+    private var pictureInPictureParamsBuilder : PictureInPictureParams.Builder? = null
+
     lateinit var utubePlayer: YouTubePlayerView
     lateinit var tv_videoTitlePlayer: TextView
     lateinit var civ_channelIhumbnailPlayer: CircleImageView
@@ -35,6 +44,7 @@ class PlayerActivity : YouTubeBaseActivity() {
     lateinit var tv_videoLikePlayer: TextView
     lateinit var tv_channelSubscribes: TextView
 //    lateinit var expandableVideo: ExpandableLayout
+    lateinit var imgBtn_pip: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +83,177 @@ class PlayerActivity : YouTubeBaseActivity() {
         Glide.with(this).load(intent.getStringExtra("channelThumbnail"))
             .into(civ_channelIhumbnailPlayer)
 
+
+        //call related video by videoId
+        val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+        val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+        val callRelated = requestRelated.getRelatedVideo(
+            "snippet",
+            videoId,
+            "video",
+            5,
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
+        )
+        callRelated.enqueue(object : Callback<RelatedData> {
+            override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
+                recyclerView.apply {
+                    setHasFixedSize(true)
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
+                }
+            }
+
+            override fun onFailure(call: Call<RelatedData>, t: Throwable) {
+                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+        //button expand
+        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
+        val cardView = findViewById<CardView>(R.id.cardView)
+        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
+        btn_expand.setOnClickListener {
+            if (expandableLayout.visibility == View.GONE) {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.VISIBLE
+                btn_expand.setImageResource(R.drawable.ic_arrow_up)
+            } else {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.GONE
+//                btn_expand.text = "EXPAND"
+                btn_expand.setImageResource(R.drawable.ic_arrow_down)
+            }
+        }
+
+        //youtube player
+        utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
+        if (videoId != null) {
+            intilizePlayer(videoId)
+        }
+
+        //picture in picture
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
+        }
+
+        //handle pic in pic click
+        imgBtn_pip = findViewById(R.id.imgBtn_pip)
+        imgBtn_pip.setOnClickListener {
+            pictureInPictureMode()
+        }
+
+    }
+
+    private fun pictureInPictureMode() {
+        Log.d(TAG, "pictureInPictureMode: Try to enter in PIP mode")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            Log.d(TAG, "pictureInPictureMode: Supports PIP")
+            //setup PIP height width
+            val aspectRatio = Rational(utubePlayer.width, utubePlayer.height)
+            pictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio).build()
+            enterPictureInPictureMode(pictureInPictureParamsBuilder!!.build())
+        }
+        else{
+            Log.d(TAG, "pictureInPictureMode: Doesn't supports PIP")
+            Toast.makeText(this, "Your device doesn't supports PIP", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        //when user presses home button, if not in PIP mode, enter in PIP, requires Android N and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            Log.d(TAG, "onUserLeaveHint: was not in PIP")
+            pictureInPictureMode()
+        }
+        else{
+            Log.d(TAG, "onUserLeaveHint: Already in PIP")
+        }
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration?
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if (isInPictureInPictureMode){
+            Log.d(TAG, "onPictureInPictureModeChanged: Entered PIP")
+            //hid pip button and actionbar
+            imgBtn_pip.visibility = View.GONE
+//            actionBar!!.hide()
+        }
+        else{
+            Log.d(TAG, "onPictureInPictureModeChanged: Exited PIP")
+            imgBtn_pip.visibility = View.VISIBLE
+//            actionBar!!.show()
+        }
+    }
+
+//    override fun onNewIntent(intent: Intent?) {
+//        super.onNewIntent(intent)
+//        //when 1st video is playing, and entered in PIP, clicked 2nd video play 2nd video
+//        Log.d(TAG, "onNewIntent: Play New Video")
+//        setVideoView(intent)
+//    }
+
+//    override fun onStop() {
+//        super.onStop()
+//        if (videoView.isPlaying){
+//            videoView.stopPlayback()
+//        }
+//    }
+
+    private fun intilizePlayer(videoId: String) {
+        utubePlayer.initialize(
+            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
+            object : YouTubePlayer.OnInitializedListener {
+                override fun onInitializationSuccess(
+                    p0: YouTubePlayer.Provider?,
+                    p1: YouTubePlayer?,
+                    p2: Boolean
+                ) {
+                    p1!!.loadVideo(videoId)
+                    p1.play()
+                }
+
+                override fun onInitializationFailure(
+                    p0: YouTubePlayer.Provider?,
+                    p1: YouTubeInitializationResult?
+                ) {
+                    Toast.makeText(applicationContext, "Failure", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
 //
+//        //call comment from videoId
+//        val recyclerViewCmt = findViewById<RecyclerView>(R.id.rcv_comment)
+//        val requestComment = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
+//        val callComment = requestComment.getComment(
+//            "snippet",
+//            40,
+//            "plainText",
+//            videoId,
+//            "relevance",
+//            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
+//        )
+//        callComment.enqueue(object : Callback<CommentData> {
+//            override fun onResponse(call: Call<CommentData>, response: Response<CommentData>) {
+//                recyclerViewCmt.apply {
+//                    setHasFixedSize(true)
+//                    layoutManager =
+//                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//                    adapter = CommentAdapter(response.body()!!.items, this@PlayerActivity)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<CommentData>, t: Throwable) {
+//                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
+//            }
+//
+//        })
+        //
 //        //call video description describ by ID
 //        tv_videoDescripPlayer = findViewById(R.id.tv_videoDescripPlayer)
 //        val requestDescrip = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
@@ -146,105 +326,6 @@ class PlayerActivity : YouTubeBaseActivity() {
 //
 //        })
 //
-        //call related video by videoId
-        val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-        val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-        val callRelated = requestRelated.getRelatedVideo(
-            "snippet",
-            videoId,
-            "video",
-            5,
-            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
-        )
-        callRelated.enqueue(object : Callback<RelatedData> {
-            override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
-                recyclerView.apply {
-                    setHasFixedSize(true)
-                    layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
-                }
-            }
-
-            override fun onFailure(call: Call<RelatedData>, t: Throwable) {
-                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
-            }
-
-        })
-
-                //button expand
-        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
-        val cardView = findViewById<CardView>(R.id.cardView)
-        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
-        btn_expand.setOnClickListener {
-            if (expandableLayout.visibility == View.GONE) {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.VISIBLE
-                btn_expand.setImageResource(R.drawable.ic_arrow_up)
-            } else {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.GONE
-//                btn_expand.text = "EXPAND"
-                btn_expand.setImageResource(R.drawable.ic_arrow_down)
-            }
-        }
-//
-//        //call comment from videoId
-//        val recyclerViewCmt = findViewById<RecyclerView>(R.id.rcv_comment)
-//        val requestComment = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-//        val callComment = requestComment.getComment(
-//            "snippet",
-//            40,
-//            "plainText",
-//            videoId,
-//            "relevance",
-//            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
-//        )
-//        callComment.enqueue(object : Callback<CommentData> {
-//            override fun onResponse(call: Call<CommentData>, response: Response<CommentData>) {
-//                recyclerViewCmt.apply {
-//                    setHasFixedSize(true)
-//                    layoutManager =
-//                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-//                    adapter = CommentAdapter(response.body()!!.items, this@PlayerActivity)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<CommentData>, t: Throwable) {
-//                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
-//            }
-//
-//        })
-
-
-        //youtube player
-        utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
-        if (videoId != null) {
-            intilizePlayer(videoId)
-        }
-    }
-
-    private fun intilizePlayer(videoId: String) {
-        utubePlayer.initialize(
-            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-            object : YouTubePlayer.OnInitializedListener {
-                override fun onInitializationSuccess(
-                    p0: YouTubePlayer.Provider?,
-                    p1: YouTubePlayer?,
-                    p2: Boolean
-                ) {
-                    p1!!.loadVideo(videoId)
-                    p1.play()
-                }
-
-                override fun onInitializationFailure(
-                    p0: YouTubePlayer.Provider?,
-                    p1: YouTubeInitializationResult?
-                ) {
-                    Toast.makeText(applicationContext, "Failure", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
 
 
 }

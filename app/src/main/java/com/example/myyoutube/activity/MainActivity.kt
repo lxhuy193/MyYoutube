@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) {
             Toast.makeText(this, "Click search item", Toast.LENGTH_SHORT).show()
-            println("aaaaaaaaaaaaa")
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }

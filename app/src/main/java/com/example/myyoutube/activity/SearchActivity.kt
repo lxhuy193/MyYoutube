@@ -57,17 +57,12 @@ class SearchActivity : AppCompatActivity() {
 
         tiet_search.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-                println("lxhuy1 " + s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-                println("lxhuy2 " + s.toString())
             }
 
             override fun afterTextChanged(s: Editable) {
-                println("lxhuy3 " + s.toString())
                 tiet_search.setOnEditorActionListener(object : TextView.OnEditorActionListener {
                     override fun onEditorAction(
                         v: TextView?,

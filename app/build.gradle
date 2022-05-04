@@ -79,6 +79,8 @@ dependencies {
     implementation project(path:':extractor')
     //config error
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
-    //
+
+    //custom UI utube player
+//    implementation 'com.dptsolutions.customuiyoutubeplayer:customuiyoutubeplayer:0.1'
 
 }
