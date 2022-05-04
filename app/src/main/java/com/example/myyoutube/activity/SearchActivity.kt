@@ -22,6 +22,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.youtube.player.internal.z
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.kiosk.KioskInfo
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -84,12 +85,19 @@ class SearchActivity : AppCompatActivity() {
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe { result: SearchInfo ->
+                                    val resultStream = mutableListOf<InfoItem>()
+                                    for (i in result.relatedItems){
+                                        if (i.infoType == InfoItem.InfoType.STREAM){
+                                            resultStream.add(i)
+                                        }
+                                    }
                                     recyclerView.apply {
                                         setHasFixedSize(true)
                                         layoutManager = LinearLayoutManager(context)
-                                        adapter = SearchAdapter(result.relatedItems, context)
+                                        adapter = SearchAdapter(resultStream, context)
                                     }
-                                    println("linh " + result.relatedItems)
+//                                    println("resultSearch " + result.relatedItems)
+//                                    println("resultStream " + resultStream)
                                 }
 
                             return true
