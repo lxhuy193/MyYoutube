@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="noactionbar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.AppCompat.NoActionBar.Me" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
