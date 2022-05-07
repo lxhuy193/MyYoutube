@@ -1,17 +1,26 @@
 package com.example.myyoutube.activity
 
+import androidx.core.app.ComponentActivity
 import android.app.PictureInPictureParams
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.NonNull
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.util.Log
 import android.util.Rational
 import android.view.View
+import android.view.Window
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -21,19 +30,20 @@ import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.R
 import com.example.myyoutube.adapter.CommentAdapter
 import com.example.myyoutube.adapter.PlayerAdapter
-import com.google.android.youtube.player.YouTubeBaseActivity
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
-import com.google.android.youtube.player.YouTubePlayerView
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.IllegalStateException
 
-class PlayerActivity : YouTubeBaseActivity() {
-    private val TAG: String = "PIP_TAG"
-    private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder? = null
+
+class PlayerActivity : AppCompatActivity() {
+//    private val TAG: String = "PIP_TAG"
+//    private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder? = null
 
     lateinit var utubePlayer: YouTubePlayerView
     lateinit var tv_videoTitlePlayer: TextView
@@ -50,12 +60,12 @@ class PlayerActivity : YouTubeBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         setContentView(R.layout.activity_player)
-//        expandableVideo = findViewById(R.id.expandableVideo)
-//        expandableVideo.expand()
-//        expandableVideo.collapse()
 
-        //get intent
+        /*
+        Get data through intent
+         */
         val intent = intent
         val videoId: String = intent.getStringExtra("videoId").toString()
 
@@ -77,16 +87,15 @@ class PlayerActivity : YouTubeBaseActivity() {
         tv_channelTitlePlayer = findViewById(R.id.tv_channelTitlePlayer)
         tv_channelTitlePlayer.text = intent.getStringExtra("channelName")
 
-//
 //        tv_channelSubscribes = findViewById(R.id.tv_channelSubscribes)
 //        val channelId = intent.getStringExtra("channelId").toString()
-//
         civ_channelIhumbnailPlayer = findViewById(R.id.civ_channelThumbnailPlayer)
         Glide.with(this).load(intent.getStringExtra("channelThumbnail"))
             .into(civ_channelIhumbnailPlayer)
 
-
-        //call related video by videoId
+        /*
+        Call related video by videoId
+         */
         val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
         val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
         val callRelated = requestRelated.getRelatedVideo(
@@ -112,7 +121,9 @@ class PlayerActivity : YouTubeBaseActivity() {
 
         })
 
-        //button expand
+        /*
+        Button expandable
+         */
         val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
         val cardView = findViewById<CardView>(R.id.cardView)
         val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
@@ -129,79 +140,109 @@ class PlayerActivity : YouTubeBaseActivity() {
             }
         }
 
-        //youtube player
-        utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
-        if (videoId != null) {
-            intilizePlayer(videoId)
-        }
-
-        //picture in picture
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
-        }
-
-        //handle pic in pic click
-        imgBtn_pip = findViewById(R.id.imgBtn_pip)
-//        imgBtn_pip.setOnClickListener {
-////            pictureInPictureMode()
-//
+        /*
+        youtube player
+         */
+//        utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
+//        if (videoId != null) {
+//            intilizePlayer(videoId)
 //        }
-        val tv_relatedVideo = findViewById<TextView>(R.id.tv_relatedVideo)
-        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-        val tv_comments = findViewById<TextView>(R.id.tv_comments)
-        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
-        imgBtn_pip.setOnClickListener(View.OnClickListener {
-            if (Build.VERSION.SDK_INT >= 26) {
-                //Trigger PiP mode
-                try {
-//                    cardView.visibility = View.GONE
-//                    tv_relatedVideo.visibility = View.GONE
-//                    rcv_playerRelated.visibility = View.GONE
-//                    tv_comments.visibility = View.GONE
-//                    rcv_comment.visibility = View.GONE
 
-                    val rational = Rational(utubePlayer.getWidth(), utubePlayer.getHeight())
-                    val mParams = PictureInPictureParams.Builder()
-                        .setAspectRatio(rational)
-                        .build()
-                    enterPictureInPictureMode(mParams)
-                } catch (e: IllegalStateException) {
-                    e.printStackTrace()
-                }
-            } else {
-                Toast.makeText(
-                    this@PlayerActivity,
-                    "API 26 needed to perform PiP",
-                    Toast.LENGTH_SHORT
-                ).show()
+        /*
+        YoutubePlayerView from Git
+         */
+        utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
+        lifecycle.addObserver(utubePlayer)
+
+        utubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                val id = videoId
+                youTubePlayer.loadVideo(id, 0f)
+                youTubePlayer.play()
             }
         })
 
+        /*
+        PiP using UtubePlayer Git
+         */
+        initPictureInPicture()
+
+        /*
+        Picture in picture
+         */
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
+//        }
+//
+//        //handle pic in pic click
+//        imgBtn_pip = findViewById(R.id.imgBtn_pip)
+//        imgBtn_pip.setOnClickListener {
+//            pictureInPictureMode()
+//        }
+
+        /*
+        Another solution for PiP - FAILED
+         */
+
+//        val tv_relatedVideo = findViewById<TextView>(R.id.tv_relatedVideo)
+//        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+//        val tv_comments = findViewById<TextView>(R.id.tv_comments)
+//        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
+//        imgBtn_pip.setOnClickListener(View.OnClickListener {
+//            if (Build.VERSION.SDK_INT >= 26) {
+//                //Trigger PiP mode
+//                try {
+////                    cardView.visibility = View.GONE
+////                    tv_relatedVideo.visibility = View.GONE
+////                    rcv_playerRelated.visibility = View.GONE
+////                    tv_comments.visibility = View.GONE
+////                    rcv_comment.visibility = View.GONE
+//
+//                    val rational = Rational(utubePlayer.getWidth(), utubePlayer.getHeight())
+//                    val mParams = PictureInPictureParams.Builder()
+//                        .setAspectRatio(rational)
+//                        .build()
+//                    enterPictureInPictureMode(mParams)
+//                } catch (e: IllegalStateException) {
+//                    e.printStackTrace()
+//                }
+//            } else {
+//                Toast.makeText(
+//                    this@PlayerActivity,
+//                    "API 26 needed to perform PiP",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        })
+
     }
 
-    private fun pictureInPictureMode() {
-        Log.d(TAG, "pictureInPictureMode: Try to enter in PIP mode")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d(TAG, "pictureInPictureMode: Supports PIP")
-            //setup PIP height width
-            val aspectRatio = Rational(utubePlayer.width, utubePlayer.height)
-            pictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio).build()
-            enterPictureInPictureMode(pictureInPictureParamsBuilder!!.build())
-        } else {
-            Log.d(TAG, "pictureInPictureMode: Doesn't supports PIP")
-            Toast.makeText(this, "Your device doesn't supports PIP", Toast.LENGTH_LONG).show()
-        }
-    }
+    private fun initPictureInPicture() {
+        imgBtn_pip = findViewById(R.id.imgBtn_pip)
+        imgBtn_pip.setOnClickListener(View.OnClickListener { view: View? ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val tv_relatedVideo = findViewById<TextView>(R.id.tv_relatedVideo)
+                val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+                val tv_comments = findViewById<TextView>(R.id.tv_comments)
+                val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
+                val cardView = findViewById<CardView>(R.id.cardView)
 
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        //when user presses home button, if not in PIP mode, enter in PIP, requires Android N and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.d(TAG, "onUserLeaveHint: was not in PIP")
-            pictureInPictureMode()
-        } else {
-            Log.d(TAG, "onUserLeaveHint: Already in PIP")
-        }
+                cardView.visibility = View.GONE
+                tv_relatedVideo.visibility = View.GONE
+                rcv_playerRelated.visibility = View.GONE
+                tv_comments.visibility = View.GONE
+                rcv_comment.visibility = View.GONE
+
+                val supportsPIP =
+                    packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+                if (supportsPIP) enterPictureInPictureMode()
+            } else {
+                AlertDialog.Builder(this)
+                    .setTitle("Can't enter picture in picture mode")
+                    .setMessage("In order to enter picture in picture mode you need a SDK version >= N.")
+                    .show()
+            }
+        })
     }
 
     override fun onPictureInPictureModeChanged(
@@ -210,16 +251,54 @@ class PlayerActivity : YouTubeBaseActivity() {
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         if (isInPictureInPictureMode) {
-            Log.d(TAG, "onPictureInPictureModeChanged: Entered PIP")
-            //hid pip button and actionbar
-            imgBtn_pip.visibility = View.GONE
-//            actionBar!!.hide()
+            utubePlayer.enterFullScreen()
         } else {
-            Log.d(TAG, "onPictureInPictureModeChanged: Exited PIP")
-            imgBtn_pip.visibility = View.VISIBLE
-//            actionBar!!.show()
+            utubePlayer.exitFullScreen()
         }
     }
+
+
+//    private fun pictureInPictureMode() {
+//        Log.d(TAG, "pictureInPictureMode: Try to enter in PIP mode")
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            Log.d(TAG, "pictureInPictureMode: Supports PIP")
+//            //setup PIP height width
+//            val aspectRatio = Rational(utubePlayer.width, utubePlayer.height)
+//            pictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio).build()
+//            enterPictureInPictureMode(pictureInPictureParamsBuilder!!.build())
+//        } else {
+//            Log.d(TAG, "pictureInPictureMode: Doesn't supports PIP")
+//            Toast.makeText(this, "Your device doesn't supports PIP", Toast.LENGTH_LONG).show()
+//        }
+//    }
+
+//    override fun onUserLeaveHint() {
+//        super.onUserLeaveHint()
+//        //when user presses home button, if not in PIP mode, enter in PIP, requires Android N and above
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            Log.d(TAG, "onUserLeaveHint: was not in PIP")
+//            pictureInPictureMode()
+//        } else {
+//            Log.d(TAG, "onUserLeaveHint: Already in PIP")
+//        }
+//    }
+
+//    override fun onPictureInPictureModeChanged(
+//        isInPictureInPictureMode: Boolean,
+//        newConfig: Configuration?
+//    ) {
+//        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+//        if (isInPictureInPictureMode) {
+//            Log.d(TAG, "onPictureInPictureModeChanged: Entered PIP")
+//            //hid pip button and actionbar
+//            imgBtn_pip.visibility = View.GONE
+////            actionBar!!.hide()
+//        } else {
+//            Log.d(TAG, "onPictureInPictureModeChanged: Exited PIP")
+//            imgBtn_pip.visibility = View.VISIBLE
+////            actionBar!!.show()
+//        }
+//    }
 
 //    override fun onNewIntent(intent: Intent?) {
 //        super.onNewIntent(intent)
@@ -244,27 +323,28 @@ class PlayerActivity : YouTubeBaseActivity() {
 //        }
 //    }
 
-    private fun intilizePlayer(videoId: String) {
-        utubePlayer.initialize(
-            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-            object : YouTubePlayer.OnInitializedListener {
-                override fun onInitializationSuccess(
-                    p0: YouTubePlayer.Provider?,
-                    p1: YouTubePlayer?,
-                    p2: Boolean
-                ) {
-                    p1!!.loadVideo(videoId)
-                    p1.play()
-                }
+//    private fun intilizePlayer(videoId: String) {
+//        utubePlayer.initialize(
+//            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
+//            object : YouTubePlayer.OnInitializedListener {
+//                override fun onInitializationSuccess(
+//                    p0: YouTubePlayer.Provider?,
+//                    p1: YouTubePlayer?,
+//                    p2: Boolean
+//                ) {
+//                    p1!!.loadVideo(videoId)
+//                    p1.play()
+//                }
+//
+//                override fun onInitializationFailure(
+//                    p0: YouTubePlayer.Provider?,
+//                    p1: YouTubeInitializationResult?
+//                ) {
+//                    Toast.makeText(applicationContext, "Failure", Toast.LENGTH_SHORT).show()
+//                }
+//            })
+//    }
 
-                override fun onInitializationFailure(
-                    p0: YouTubePlayer.Provider?,
-                    p1: YouTubeInitializationResult?
-                ) {
-                    Toast.makeText(applicationContext, "Failure", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
 //
 //        //call comment from videoId
 //        val recyclerViewCmt = findViewById<RecyclerView>(R.id.rcv_comment)
@@ -365,6 +445,5 @@ class PlayerActivity : YouTubeBaseActivity() {
 //
 //        })
 //
-
 
 }

@@ -15,7 +15,7 @@ import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.R
 import com.example.myyoutube.adapter.TrendingAdapter
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
-import com.google.android.youtube.player.internal.t
+//import com.google.android.youtube.player.internal.t
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers

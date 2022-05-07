@@ -11,7 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.youtube.player.YouTubePlayerView
+<!--        <com.google.android.youtube.player.YouTubePlayerView-->
+<!--            android:id="@+id/utubePlayer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
             android:id="@+id/utubePlayer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
