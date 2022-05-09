@@ -8,29 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myyoutube.Data.ChannelDetail
 import com.example.myyoutube.Data.TrendItem
-import com.example.myyoutube.Network.ServiceBuilder
-import com.example.myyoutube.Network.YoutubeEndpoints
-import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
+import com.example.myyoutube.activity.MainActivity
+import com.example.myyoutube.activity.PlayerActivity
+import com.example.myyoutube.activity.PlayerTempActivity
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 //import com.google.android.youtube.player.internal.i
 //import com.google.android.youtube.player.internal.r
 //import com.google.android.youtube.player.internal.v
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.schedulers.Schedulers.io
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context) :
@@ -96,8 +91,12 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
             Unit
             //short description used for demo description before expand
             Log.i("heyhey", trendItems[position].shortDescription)
+            /*
+            INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER
+             */
+            var intent = Intent("FINISH_ACTIVITY",null ,context, PlayerActivity::class.java)
+            LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent)
 
-            val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra("videoId", videoId)
             intent.putExtra("videoTitle", trendItems[position].name)
             intent.putExtra("videoDate", videoDate)
