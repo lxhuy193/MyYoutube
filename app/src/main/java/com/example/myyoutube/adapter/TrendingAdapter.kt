@@ -81,20 +81,21 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
 
         //get VideoId + videoView + channelThumbnail + channelName
         val videoId = trendItems[position].url.substringAfterLast("=")
-        val videoView = trendItems[position].viewCount
+//        val videoView = trendItems[position].viewCount
         val videoDate = trendItems[position].textualUploadDate
         val channelThumbnail = trendItems[position].uploaderAvatarUrl
         val channelName = trendItems[position].uploaderName
+        val videoUrl = trendItems[position].url
 
 
         holder.itemView.setOnClickListener { v: View ->
             Unit
             //short description used for demo description before expand
-            Log.i("heyhey", trendItems[position].shortDescription)
+//            Log.i("heyhey", trendItems[position].shortDescription)
             /*
             INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER
              */
-            var intent = Intent("FINISH_ACTIVITY",null ,context, PlayerActivity::class.java)
+            val intent = Intent("FINISH_ACTIVITY", null, context, PlayerActivity::class.java)
             LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent)
 
             intent.putExtra("videoId", videoId)
@@ -102,8 +103,14 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
             intent.putExtra("videoDate", videoDate)
             intent.putExtra("channelThumbnail", channelThumbnail)
             intent.putExtra("channelName", channelName)
+//            intent.putExtra("videoView", videoView)
+            intent.putExtra("videoUrl", videoUrl)
+            intent.putExtra("trendingPos", position)
 
-            ExtractorHelper.getStreamInfo(0, trendItems[position].url, false)
+//            context.startActivity(intent)
+
+
+            ExtractorHelper.getStreamInfo(0, videoUrl, false)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result: StreamInfo ->
@@ -112,22 +119,10 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
                     intent.putExtra("videoLike", result.likeCount.toString())
                     intent.putExtra("videoView", result.viewCount.toString())
                     context.startActivity(intent)
-
                 }) { throwable: Throwable ->
 //                    println("erorrrr call description failed")
                 }
 
-            ExtractorHelper.getPlaylistInfo(0, trendItems[position].url, false)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ results: PlaylistInfo ->
-                    Log.i("huyhuy2 ", results.relatedItems[0].name)
-//                    intent.putExtra("videoDescrip", result.description.content)
-//                    intent.putExtra("videoLike", result.likeCount.toString())
-//                    context.startActivity(intent)
-                }) { throwable: Throwable ->
-                    println("erorrrr call playlist failed")
-                }
 
         }
 

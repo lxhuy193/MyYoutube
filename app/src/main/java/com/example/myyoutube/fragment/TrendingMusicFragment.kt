@@ -44,7 +44,7 @@ class TrendingMusicFragment : Fragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result: KioskInfo ->
-                    progressBar.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 recyclerView.apply {
                     setHasFixedSize(true)
                     layoutManager = LinearLayoutManager(activity)

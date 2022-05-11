@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myyoutube.R
 import com.example.myyoutube.adapter.SearchAdapter
 import com.example.myyoutube.adapter.TrendingAdapter
+import com.example.myyoutube.additionClass.RelatedItemInfo
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -25,6 +26,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.kiosk.KioskInfo
 import org.schabi.newpipe.extractor.search.SearchInfo
+import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class SearchActivity : AppCompatActivity() {
@@ -86,6 +88,17 @@ class SearchActivity : AppCompatActivity() {
                                             resultStream.add(i)
                                         }
                                     }
+
+                                    ExtractorHelper.getStreamInfo(0, resultStream[0].url, true)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(
+                                            { streamInfo: StreamInfo ->
+//                                                println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
+                                            }
+                                        ) { exception: Throwable? ->
+                                            println("error")
+                                        }
                                     recyclerView.apply {
                                         setHasFixedSize(true)
                                         layoutManager = LinearLayoutManager(context)

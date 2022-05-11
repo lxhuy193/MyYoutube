@@ -15,11 +15,13 @@ import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
 import de.hdodenhof.circleimageview.CircleImageView
+import org.schabi.newpipe.extractor.InfoItem
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PlayerAdapter(val relatedItem: List<RelatedItem>, val context: Context) :
+class PlayerAdapter(val relatedItem: List<InfoItem>, val context: Context) :
     RecyclerView.Adapter<PlayerAdapter.VH>() {
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val iv_videoThumbnailPlayerItem =
@@ -35,86 +37,30 @@ class PlayerAdapter(val relatedItem: List<RelatedItem>, val context: Context) :
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        if (relatedItem[position].snippet != null) {
-            // video thumbnail + video title
-            Glide.with(holder.itemView.context)
-                .load(relatedItem[position].snippet.thumbnails.high.url)
-                .into(holder.iv_videoThumbnailPlayerItem)
-            holder.tv_videoTitlePlayerItem.text = relatedItem[position].snippet.title
+        val item = relatedItem[position] as StreamInfoItem
 
-            // channel thumbnail + channel title
-            val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-            val call = request.getChannel(
-                "snippet",
-                "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-                relatedItem[position].snippet.channelId
-            )
-            call.enqueue(object : Callback<ChannelDetail> {
-                override fun onResponse(call: Call<ChannelDetail>, response: Response<ChannelDetail>) {
-                    if (response.isSuccessful) {
-                        Glide.with(holder.itemView.context)
-                            .load(response.body()!!.items[0].snippet.thumbnails.high.url)
-                            .into(holder.civ_channelImagePlayerItem)
-                    }
-                    holder.tv_channelTitlePlayerItem.text = response.body()!!.items[0].snippet.title
-                }
+        // video thumbnail + video title
+        Glide.with(holder.itemView.context)
+            .load(item.thumbnailUrl)
+            .into(holder.iv_videoThumbnailPlayerItem)
+        holder.tv_videoTitlePlayerItem.text = item.name
 
-                override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
-                    println("bbbbbbbbbb" + t)
-                }
+        // channel thumbnail + channel title
+        Glide.with(holder.itemView.context)
+            .load(item.uploaderAvatarUrl)
+            .into(holder.civ_channelImagePlayerItem)
+        holder.tv_channelTitlePlayerItem.text = item.uploaderName
 
-            })
-
-            //intent pass video title + channel thumbnail + channel title
-            holder.itemView.setOnClickListener { v: View ->
-                Unit
-                val intent = Intent(context, PlayerActivity::class.java)
-                //video id for youtube player
-                intent.putExtra("videoId", relatedItem[position].id.videoId)
-                intent.putExtra("videoTitle", relatedItem[position].snippet.title)
-
-                //call channelThumbnail, channelTitle, channelSubscribes to put Intent
-                val requestItent = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-                val callItent = requestItent.getChannel(
-                    "snippet",
-                    "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A",
-                    relatedItem[position].snippet.channelId
-                )
-
-                callItent.enqueue(object : Callback<ChannelDetail> {
-
-                    override fun onResponse(
-                        call: Call<ChannelDetail>,
-                        response: Response<ChannelDetail>
-                    ) {
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            intent.putExtra(
-                                "channelThumbnail",
-                                body!!.items[0].snippet.thumbnails.high.url
-                            )
-                            intent.putExtra(
-                                "channelTitle",
-                                body!!.items[0].snippet.title
-                            )
-                            intent.putExtra(
-                                "channelId",
-                                body!!.items[0].id
-                            )
-
-                            context.startActivity(intent)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ChannelDetail>, t: Throwable) {
-                        println("aaaaa" + t)
-                    }
-
-                })
-
-            }
-        }
-
+        /*
+        ITEM CLICK LISTENER
+         */
+//        holder.itemView.setOnClickListener { v : View ->
+//            Unit
+//            val intent = Intent(context, PlayerActivity::class.java)
+//            intent.putExtra("videoPlayerUrl", item.url)
+//            context.startActivity(intent)
+//
+//        }
     }
 
     override fun getItemCount(): Int {

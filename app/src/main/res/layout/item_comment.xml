@@ -73,7 +73,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="1932" />
+                            android:text="193" />
 
                     </LinearLayout>
 
@@ -83,18 +83,22 @@
                         android:layout_marginStart="24dp"
                         android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/ic_comment_24" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="24dp"-->
+<!--                            android:layout_height="24dp"-->
+<!--                            android:layout_gravity="center_horizontal"-->
+<!--                            android:src="@drawable/ic_comment_24" />-->
 
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_cmtCount"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center_horizontal"-->
+<!--                            android:text="24" />-->
                         <TextView
-                            android:id="@+id/tv_cmtCount"
+                            android:id="@+id/tv_cmtTime"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="24" />
+                            android:layout_height="wrap_content"/>
 
                     </LinearLayout>
 

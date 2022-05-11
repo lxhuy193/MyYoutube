@@ -35,11 +35,21 @@ import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.R
 import com.example.myyoutube.adapter.CommentAdapter
 import com.example.myyoutube.adapter.PlayerAdapter
+import com.example.myyoutube.adapter.TrendingAdapter
+import com.example.myyoutube.additionClass.RelatedItemInfo
+import com.example.myyoutube.newpipeExtracter.ExtractorHelper
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants.PlaybackRate
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import de.hdodenhof.circleimageview.CircleImageView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
+import org.schabi.newpipe.extractor.comments.CommentsInfo
+import org.schabi.newpipe.extractor.kiosk.KioskInfo
+import org.schabi.newpipe.extractor.stream.StreamInfo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,6 +57,8 @@ import java.lang.IllegalStateException
 
 
 class PlayerActivity : AppCompatActivity() {
+
+    private val TAG = "PLAYER_ACTIVITY"
 
     lateinit var utubePlayer: YouTubePlayerView
     lateinit var tv_videoTitlePlayer: TextView
@@ -76,6 +88,8 @@ class PlayerActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR);
         supportActionBar?.hide()
         setContentView(R.layout.activity_player)
+
+
         /*
         Get data through intent
          */
@@ -106,39 +120,11 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(this).load(intent.getStringExtra("channelThumbnail"))
             .into(civ_channelIhumbnailPlayer)
 
-/*
-INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
- */
+        /*
+        INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
+         */
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(mReceiver, IntentFilter("FINISH_ACTIVITY"))
-
-        /*
-        Call related video by videoId
-         */
-        val recyclerView = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-        val requestRelated = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
-        val callRelated = requestRelated.getRelatedVideo(
-            "snippet",
-            videoId,
-            "video",
-            5,
-            "AIzaSyAGPiwZJTlrJqeG5bET8YDEiCJ8zCJCQ_A"
-        )
-        callRelated.enqueue(object : Callback<RelatedData> {
-            override fun onResponse(call: Call<RelatedData>, response: Response<RelatedData>) {
-                recyclerView.apply {
-                    setHasFixedSize(true)
-                    layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = PlayerAdapter(response.body()!!.items, this@PlayerActivity)
-                }
-            }
-
-            override fun onFailure(call: Call<RelatedData>, t: Throwable) {
-                Toast.makeText(this@PlayerActivity, "Fail", Toast.LENGTH_SHORT).show()
-            }
-
-        })
 
         /*
         Button expandable
@@ -160,14 +146,6 @@ INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO
         }
 
         /*
-        youtube player
-         */
-//        utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
-//        if (videoId != null) {
-//            intilizePlayer(videoId)
-//        }
-
-        /*
         YoutubePlayerView from Git
          */
         utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
@@ -178,92 +156,65 @@ INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO
                 val id = videoId
                 youTubePlayer.loadVideo(id, 0f)
                 youTubePlayer.play()
+
+                setPlaybackSpeedButtonsClickListeners(youTubePlayer)
             }
         })
 
         /*
-        PiP using UtubePlayer Git
+        PiP using YouTubePlayer Git
          */
         initPictureInPicture()
 
-        /*
-        Picture in picture
-         */
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
-//        }
-//
-//        //handle pic in pic click
-//        imgBtn_pip = findViewById(R.id.imgBtn_pip)
-//        imgBtn_pip.setOnClickListener {
-//            pictureInPictureMode()
-//        }
 
         /*
-        Another solution for PiP - FAILED
+        COMMENT VIDEO
          */
+        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
+        val videoUrl = intent.getStringExtra("videoUrl")
+        ExtractorHelper.getCommentsInfo(0, videoUrl, false)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ result: CommentsInfo ->
+                rcv_comment.apply {
+                    setHasFixedSize(true)
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = CommentAdapter(result.relatedItems, context)
+                }
+            }) { throwable: Throwable ->
+//                    println("erorrrr call description failed")
+            }
 
-//        val tv_relatedVideo = findViewById<TextView>(R.id.tv_relatedVideo)
-//        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-//        val tv_comments = findViewById<TextView>(R.id.tv_comments)
-//        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
-//        imgBtn_pip.setOnClickListener(View.OnClickListener {
-//            if (Build.VERSION.SDK_INT >= 26) {
-//                //Trigger PiP mode
-//                try {
-////                    cardView.visibility = View.GONE
-////                    tv_relatedVideo.visibility = View.GONE
-////                    rcv_playerRelated.visibility = View.GONE
-////                    tv_comments.visibility = View.GONE
-////                    rcv_comment.visibility = View.GONE
-//
-//                    val rational = Rational(utubePlayer.getWidth(), utubePlayer.getHeight())
-//                    val mParams = PictureInPictureParams.Builder()
-//                        .setAspectRatio(rational)
-//                        .build()
-//                    enterPictureInPictureMode(mParams)
-//                } catch (e: IllegalStateException) {
-//                    e.printStackTrace()
-//                }
-//            } else {
-//                Toast.makeText(
-//                    this@PlayerActivity,
-//                    "API 26 needed to perform PiP",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        })
-
+        /*
+        RELATED VIDEO
+         */
+        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+        ExtractorHelper.getStreamInfo(0, videoUrl, true)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { streamInfo: StreamInfo ->
+                    println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
+                    rcv_playerRelated.apply {
+                        setHasFixedSize(true)
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = PlayerAdapter(RelatedItemInfo.getInfo(streamInfo).relatedItems, context)
+                    }
+                }
+            ) { exception: Throwable? ->
+                println("error")
+            }
     }
 
-    //    override fun onStop() {
-//        super.onStop()
-//        onStopCalled = true
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        onStopCalled = false
-//    }
     private fun initPictureInPicture() {
         imgBtn_pip = findViewById(R.id.imgBtn_pip)
         imgBtn_pip.setOnClickListener(View.OnClickListener { view: View? ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                val tv_relatedVideo = findViewById<TextView>(R.id.tv_relatedVideo)
-//                val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-//                val tv_comments = findViewById<TextView>(R.id.tv_comments)
-//                val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
-//                val cardView = findViewById<CardView>(R.id.cardView)
-//
-//                cardView.visibility = View.GONE
-//                tv_relatedVideo.visibility = View.GONE
-//                rcv_playerRelated.visibility = View.GONE
-//                tv_comments.visibility = View.GONE
-//                rcv_comment.visibility = View.GONE
-
                 val supportsPIP =
                     packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
-                if (supportsPIP) enterPictureInPictureMode()
+                if (supportsPIP) {
+                    Toast.makeText(this, TAG, Toast.LENGTH_SHORT).show()
+                    enterPictureInPictureMode()
+                }
             } else {
                 AlertDialog.Builder(this)
                     .setTitle("Can't enter picture in picture mode")
@@ -279,14 +230,6 @@ INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO
         newConfig: Configuration?
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-//        if (isInPictureInPictureMode) {
-//            utubePlayer.enterFullScreen()
-//        } else {
-//            utubePlayer.exitFullScreen()
-//            if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
-//                finishAndRemoveTask()
-//            }
-//        }
         isInPipMode = isInPictureInPictureMode
     }
 
@@ -297,7 +240,95 @@ INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO
         }
     }
 
+    private fun setPlaybackSpeedButtonsClickListeners(youTubePlayer: YouTubePlayer) {
+        val playbackSpeed_0_25 = findViewById<Button>(R.id.playback_speed_0_25)
+        val playbackSpeed_0_5 = findViewById<Button>(R.id.playback_speed_0_5)
+        val playbackSpeed_1 = findViewById<Button>(R.id.playback_speed_1)
+        val playbackSpeed_1_5 = findViewById<Button>(R.id.playback_speed_1_5)
+        val playbackSpeed_2 = findViewById<Button>(R.id.playback_speed_2)
+
+        playbackSpeed_0_25.setOnClickListener { view: View? ->
+            youTubePlayer.setPlaybackRate(
+                PlaybackRate.RATE_0_25
+            )
+        }
+
+        playbackSpeed_0_5.setOnClickListener { view: View? ->
+            youTubePlayer.setPlaybackRate(
+                PlaybackRate.RATE_0_5
+            )
+        }
+
+        playbackSpeed_1.setOnClickListener { view: View? ->
+            youTubePlayer.setPlaybackRate(
+                PlaybackRate.RATE_1
+            )
+        }
+
+        playbackSpeed_1_5.setOnClickListener { view: View? ->
+            youTubePlayer.setPlaybackRate(
+                PlaybackRate.RATE_1_5
+            )
+        }
+
+        playbackSpeed_2.setOnClickListener { view: View? ->
+            youTubePlayer.setPlaybackRate(
+                PlaybackRate.RATE_2
+            )
+        }
+    }
 }
+
+        /*
+        Picture in picture
+         */
+/*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
+        }
+
+        //handle pic in pic click
+        imgBtn_pip = findViewById(R.id.imgBtn_pip)
+        imgBtn_pip.setOnClickListener {
+            pictureInPictureMode()
+        }
+*/
+
+/*
+Another solution for PiP - FAILED
+ */
+/*
+        val tv_relatedVideo = findViewById<TextView>(R.id.tv_relatedVideo)
+        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+        val tv_comments = findViewById<TextView>(R.id.tv_comments)
+        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
+        imgBtn_pip.setOnClickListener(View.OnClickListener {
+            if (Build.VERSION.SDK_INT >= 26) {
+                //Trigger PiP mode
+                try {
+//                    cardView.visibility = View.GONE
+//                    tv_relatedVideo.visibility = View.GONE
+//                    rcv_playerRelated.visibility = View.GONE
+//                    tv_comments.visibility = View.GONE
+//                    rcv_comment.visibility = View.GONE
+
+                    val rational = Rational(utubePlayer.getWidth(), utubePlayer.getHeight())
+                    val mParams = PictureInPictureParams.Builder()
+                        .setAspectRatio(rational)
+                        .build()
+                    enterPictureInPictureMode(mParams)
+                } catch (e: IllegalStateException) {
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(
+                    this@PlayerActivity,
+                    "API 26 needed to perform PiP",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+*/
 
 /*
     private fun pictureInPictureMode() {
