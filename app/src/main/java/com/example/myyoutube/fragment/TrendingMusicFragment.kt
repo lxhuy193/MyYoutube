@@ -40,6 +40,7 @@ class TrendingMusicFragment : Fragment() {
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBarMusic)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewMusic)
 
+
         ExtractorHelper.getKioskInfo(0, "https://www.youtube.com/feed/trending", false)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

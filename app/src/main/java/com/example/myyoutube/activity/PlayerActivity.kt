@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.NonNull
@@ -21,6 +22,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -28,16 +30,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.myyoutube.Data.*
 import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.R
-import com.example.myyoutube.adapter.CommentAdapter
-import com.example.myyoutube.adapter.PlayerAdapter
-import com.example.myyoutube.adapter.TrendingAdapter
+import com.example.myyoutube.adapter.*
 import com.example.myyoutube.additionClass.RelatedItemInfo
+import com.example.myyoutube.fragment.CommentFragment
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
+import com.google.android.material.tabs.TabLayout
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants.PlaybackRate
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -47,9 +50,11 @@ import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.greenrobot.eventbus.EventBus
 import org.schabi.newpipe.extractor.comments.CommentsInfo
 import org.schabi.newpipe.extractor.kiosk.KioskInfo
 import org.schabi.newpipe.extractor.stream.StreamInfo
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,23 +69,24 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var tv_videoTitlePlayer: TextView
     lateinit var civ_channelIhumbnailPlayer: CircleImageView
     lateinit var tv_channelTitlePlayer: TextView
-    lateinit var tv_videoDatePlayer: TextView
-    lateinit var tv_videoDescripPlayer: TextView
-    lateinit var tv_videoViewPlayer: TextView
-    lateinit var tv_videoLikePlayer: TextView
-    lateinit var tv_channelSubscribes: TextView
+//    lateinit var tv_videoDatePlayer: TextView
+//    lateinit var tv_videoDescripPlayer: TextView
+//    lateinit var tv_videoViewPlayer: TextView
+//    lateinit var tv_videoLikePlayer: TextView
+//    lateinit var tv_channelSubscribes: TextView
+    lateinit var imgBtn_pip: ImageButton
 
     /*
-    INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
+    DATA TO VIEW PAGER
     */
-    lateinit var imgBtn_pip: ImageButton
-    private val mReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.let { intent ->
-                if (intent.action == "FINISH_ACTIVITY")
-                    finish()
-            }
-        }
+
+    companion object {
+        //        val intent =
+        var videoUrl: String ?= null
+        var videoView: String ?= null
+        var videoLike: String ?= null
+        var videoDate: String ?= null
+        var videoDescrip: String ?= null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,37 +95,6 @@ class PlayerActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(R.layout.activity_player)
 
-
-        /*
-        Get data through intent
-         */
-        val intent = intent
-        val videoId: String = intent.getStringExtra("videoId").toString()
-
-        tv_videoTitlePlayer = findViewById(R.id.tv_videoTitlePlayer)
-        tv_videoTitlePlayer.text = intent.getStringExtra("videoTitle")
-
-        tv_videoViewPlayer = findViewById(R.id.tv_videoViewPlayer)
-        tv_videoViewPlayer.text = intent.getStringExtra("videoView").toString()
-
-        tv_videoDatePlayer = findViewById(R.id.tv_videoDatePlayer)
-        tv_videoDatePlayer.text = intent.getStringExtra("videoDate")
-
-        tv_videoDescripPlayer = findViewById(R.id.tv_videoDescripPlayer)
-        tv_videoDescripPlayer.text = intent.getStringExtra("videoDescrip")
-
-        tv_videoLikePlayer = findViewById(R.id.tv_videoLikePlayer)
-        tv_videoLikePlayer.text = intent.getStringExtra("videoLike")
-
-        tv_channelTitlePlayer = findViewById(R.id.tv_channelTitlePlayer)
-        tv_channelTitlePlayer.text = intent.getStringExtra("channelName")
-
-//        tv_channelSubscribes = findViewById(R.id.tv_channelSubscribes)
-//        val channelId = intent.getStringExtra("channelId").toString()
-        civ_channelIhumbnailPlayer = findViewById(R.id.civ_channelThumbnailPlayer)
-        Glide.with(this).load(intent.getStringExtra("channelThumbnail"))
-            .into(civ_channelIhumbnailPlayer)
-
         /*
         INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
          */
@@ -127,27 +102,80 @@ class PlayerActivity : AppCompatActivity() {
             .registerReceiver(mReceiver, IntentFilter("FINISH_ACTIVITY"))
 
         /*
-        Button expandable
+        VIEWPAGER
          */
-        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
-        val cardView = findViewById<CardView>(R.id.cardView)
-        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
-        btn_expand.setOnClickListener {
-            if (expandableLayout.visibility == View.GONE) {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.VISIBLE
-                btn_expand.setImageResource(R.drawable.ic_arrow_up)
-            } else {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.GONE
-//                btn_expand.text = "EXPAND"
-                btn_expand.setImageResource(R.drawable.ic_arrow_down)
-            }
-        }
+        //TabLayout + viewpager
+        val viewPagerPlayer = findViewById<ViewPager>(R.id.vp_player)
+        viewPagerPlayer.adapter = ViewPagerPlayerAdapter(supportFragmentManager)
+        val tabLayoutPlayer = findViewById<TabLayout>(R.id.tl_player)
+        //SET TITLE TEXT COLOR
+        tabLayoutPlayer.setTabTextColors(Color.parseColor("#282828"), Color.parseColor("#ffffff"))
+        tabLayoutPlayer.setupWithViewPager(viewPagerPlayer)
+        //SET ELEVATION ACTION BAR TO ZERO
+        supportActionBar!!.elevation = 0F
 
         /*
-        YoutubePlayerView from Git
+        GET STREAM INFO BY VIDEO URL
          */
+        val intent = intent
+        tv_videoTitlePlayer = findViewById(R.id.tv_videoTitlePlayer)
+//        tv_videoViewPlayer = findViewById(R.id.tv_videoViewPlayer)
+//        tv_videoDatePlayer = findViewById(R.id.tv_videoDatePlayer)
+//        tv_videoDescripPlayer = findViewById(R.id.tv_videoDescripPlayer)
+//        tv_videoLikePlayer = findViewById(R.id.tv_videoLikePlayer)
+        tv_channelTitlePlayer = findViewById(R.id.tv_channelTitlePlayer)
+        videoUrl = intent.getStringExtra("videoUrl")
+//        val channelId = intent.getStringExtra("channelId").toString()
+
+        /*
+        PLAYER DETAIL
+         */
+        ExtractorHelper.getStreamInfo(0, videoUrl, false)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ result: StreamInfo ->
+                tv_videoTitlePlayer.text = result.name
+//                tv_videoViewPlayer.text = result.viewCount.toString()
+                videoView = result.viewCount.toString()
+//                tv_videoDatePlayer.text = result.textualUploadDate
+                videoDate = result.textualUploadDate
+//                tv_videoDescripPlayer.text = result.description.content
+                videoDescrip = result.description.content
+//                tv_videoLikePlayer.text = result.likeCount.toString()
+                videoLike = result.likeCount.toString()
+                tv_channelTitlePlayer.text = result.uploaderName
+
+                civ_channelIhumbnailPlayer = findViewById(R.id.civ_channelThumbnailPlayer)
+                Glide.with(this).load(result.uploaderAvatarUrl)
+                    .into(civ_channelIhumbnailPlayer)
+            }) { throwable: Throwable ->
+                println("erorrrr call getStreamInfo failed")
+            }
+
+        /*
+        Button expandable
+         */
+//        val btn_expand = findViewById<ImageButton>(R.id.btn_expand)
+//        val cardView = findViewById<CardView>(R.id.cardView)
+//        val expandableLayout = findViewById<LinearLayout>(R.id.expandableLayout)
+//        btn_expand.setOnClickListener {
+//            if (expandableLayout.visibility == View.GONE) {
+//                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+//                expandableLayout.visibility = View.VISIBLE
+//                btn_expand.setImageResource(R.drawable.ic_arrow_up)
+//            } else {
+//                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+//                expandableLayout.visibility = View.GONE
+////                btn_expand.text = "EXPAND"
+//                btn_expand.setImageResource(R.drawable.ic_arrow_down)
+//            }
+//        }
+
+        /*
+        YOUTUBE PLAYER VIEW
+         */
+        val videoId = videoUrl!!.substringAfterLast("=")
+
         utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
         lifecycle.addObserver(utubePlayer)
 
@@ -166,43 +194,77 @@ class PlayerActivity : AppCompatActivity() {
          */
         initPictureInPicture()
 
-
         /*
         COMMENT VIDEO
          */
-        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
-        val videoUrl = intent.getStringExtra("videoUrl")
-        ExtractorHelper.getCommentsInfo(0, videoUrl, false)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result: CommentsInfo ->
-                rcv_comment.apply {
-                    setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = CommentAdapter(result.relatedItems, context)
-                }
-            }) { throwable: Throwable ->
-//                    println("erorrrr call description failed")
-            }
+//        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
+//
+//        ExtractorHelper.getCommentsInfo(0, videoUrl, false)
+//            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ result: CommentsInfo ->
+//                rcv_comment.apply {
+//                    setHasFixedSize(true)
+//                    layoutManager = LinearLayoutManager(context)
+//                    adapter = CommentAdapter(result.relatedItems, context)
+//                }
+//            }) { throwable: Throwable ->
+////                    println("erorrrr call description failed")
+//            }
 
         /*
         RELATED VIDEO
          */
-        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-        ExtractorHelper.getStreamInfo(0, videoUrl, true)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { streamInfo: StreamInfo ->
-                    println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
-                    rcv_playerRelated.apply {
-                        setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(context)
-                        adapter = PlayerAdapter(RelatedItemInfo.getInfo(streamInfo).relatedItems, context)
-                    }
-                }
-            ) { exception: Throwable? ->
-                println("error")
+//        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+//        ExtractorHelper.getStreamInfo(0, videoUrl, true)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(
+//                { streamInfo: StreamInfo ->
+//                    println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
+//                    rcv_playerRelated.apply {
+//                        setHasFixedSize(true)
+//                        layoutManager = LinearLayoutManager(context)
+//                        adapter =
+//                            PlayerAdapter(RelatedItemInfo.getInfo(streamInfo).relatedItems, context)
+//                    }
+//                }
+//            ) { exception: Throwable? ->
+//                println("error")
+//            }
+
+//        /*
+//        DATA TO VIEW PAGER
+//        */
+//        val bundle = Bundle()
+//        val fragment = CommentFragment()
+//        val myMessage = "Stackoverflow is cool!"
+//        bundle.putString("message", myMessage)
+//        fragment.arguments = bundle
+//        supportFragmentManager.beginTransaction().replace(R.id.vp_player, fragment).commit()
+
+//        val bundle = Bundle()
+//        val temp = "YESSSS"
+//        bundle.putString("banhmi", temp)
+//        var commentFragment = CommentFragment()
+//        commentFragment.arguments = bundle
+
+//        args.putStringArrayList("argument_name", myListInString);
+//        MyFragment fragment = new MyFragment();
+//        fragment.setArguments(args);
+//        fragment.show(fragmentTransaction, "fragment_tag")
+
+    }
+
+    /*
+    INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
+    */
+    private val mReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let { intent ->
+                if (intent.action == "FINISH_ACTIVITY")
+                    finish()
             }
+        }
     }
 
     private fun initPictureInPicture() {
@@ -279,9 +341,9 @@ class PlayerActivity : AppCompatActivity() {
     }
 }
 
-        /*
-        Picture in picture
-         */
+/*
+Picture in picture
+ */
 /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             pictureInPictureParamsBuilder = PictureInPictureParams.Builder()

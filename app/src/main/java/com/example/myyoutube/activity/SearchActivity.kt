@@ -88,17 +88,17 @@ class SearchActivity : AppCompatActivity() {
                                             resultStream.add(i)
                                         }
                                     }
-
-                                    ExtractorHelper.getStreamInfo(0, resultStream[0].url, true)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(
-                                            { streamInfo: StreamInfo ->
-//                                                println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
-                                            }
-                                        ) { exception: Throwable? ->
-                                            println("error")
-                                        }
+//
+//                                    ExtractorHelper.getStreamInfo(0, resultStream[0].url, true)
+//                                        .subscribeOn(Schedulers.io())
+//                                        .observeOn(AndroidSchedulers.mainThread())
+//                                        .subscribe(
+//                                            { streamInfo: StreamInfo ->
+////                                                println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
+//                                            }
+//                                        ) { exception: Throwable? ->
+//                                            println("error")
+//                                        }
                                     recyclerView.apply {
                                         setHasFixedSize(true)
                                         layoutManager = LinearLayoutManager(context)

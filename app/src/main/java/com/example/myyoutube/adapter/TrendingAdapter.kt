@@ -15,7 +15,7 @@ import com.example.myyoutube.Data.TrendItem
 import com.example.myyoutube.R
 import com.example.myyoutube.activity.MainActivity
 import com.example.myyoutube.activity.PlayerActivity
-import com.example.myyoutube.activity.PlayerTempActivity
+//import com.example.myyoutube.activity.PlayerTempActivity
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 //import com.google.android.youtube.player.internal.i
 //import com.google.android.youtube.player.internal.r
@@ -37,6 +37,48 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
         val tv_videoTitle = view.findViewById<TextView>(R.id.tv_videoTitle)
         val civ_channelImage = view.findViewById<CircleImageView>(R.id.civ_channelImage)
         val tv_channelTitle = view.findViewById<TextView>(R.id.tv_channelTitle)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        return VH(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_trending, parent, false)
+        )
+    }
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        Glide.with(holder.itemView.context).load(trendItems[position].thumbnailUrl)
+            .into(holder.iv_thumbNail)
+        Glide.with(holder.itemView.context).load(trendItems[position].uploaderAvatarUrl)
+            .into(holder.civ_channelImage)
+        holder.tv_videoTitle.text = trendItems[position].name
+        holder.tv_channelTitle.text = trendItems[position].uploaderName
+
+        val videoUrl = trendItems[position].url
+
+
+        holder.itemView.setOnClickListener { v: View ->
+            Unit
+            //short description used for demo description before expand
+//            Log.i("heyhey", trendItems[position].shortDescription)
+            /*
+            INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER
+             */
+            val intent = Intent("FINISH_ACTIVITY", null, context, PlayerActivity::class.java)
+            LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent)
+
+            intent.putExtra("videoUrl", videoUrl)
+
+            context.startActivity(intent)
+
+
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return trendItems.size
+    }
+
+}
 
 //        fun bind(trendItem: TrendItem) {
 //            Glide.with(itemView.context).load(trendItem.snippet.thumbnails.high.url).into(iv_thumbNail)
@@ -62,69 +104,6 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
 //            })
 //        }
 
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        return VH(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_trending, parent, false)
-        )
-    }
-
-    override fun onBindViewHolder(holder: VH, position: Int) {
-        Glide.with(holder.itemView.context).load(trendItems[position].thumbnailUrl)
-            .into(holder.iv_thumbNail)
-        Glide.with(holder.itemView.context).load(trendItems[position].uploaderAvatarUrl)
-            .into(holder.civ_channelImage)
-        holder.tv_videoTitle.text = trendItems[position].name
-        holder.tv_channelTitle.text = trendItems[position].uploaderName
-
-        //get VideoId + videoView + channelThumbnail + channelName
-        val videoId = trendItems[position].url.substringAfterLast("=")
-//        val videoView = trendItems[position].viewCount
-        val videoDate = trendItems[position].textualUploadDate
-        val channelThumbnail = trendItems[position].uploaderAvatarUrl
-        val channelName = trendItems[position].uploaderName
-        val videoUrl = trendItems[position].url
-
-
-        holder.itemView.setOnClickListener { v: View ->
-            Unit
-            //short description used for demo description before expand
-//            Log.i("heyhey", trendItems[position].shortDescription)
-            /*
-            INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER
-             */
-            val intent = Intent("FINISH_ACTIVITY", null, context, PlayerActivity::class.java)
-            LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent)
-
-            intent.putExtra("videoId", videoId)
-            intent.putExtra("videoTitle", trendItems[position].name)
-            intent.putExtra("videoDate", videoDate)
-            intent.putExtra("channelThumbnail", channelThumbnail)
-            intent.putExtra("channelName", channelName)
-//            intent.putExtra("videoView", videoView)
-            intent.putExtra("videoUrl", videoUrl)
-            intent.putExtra("trendingPos", position)
-
-//            context.startActivity(intent)
-
-
-            ExtractorHelper.getStreamInfo(0, videoUrl, false)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result: StreamInfo ->
-//                    Log.i("huyhuy ", result.description.content)
-                    intent.putExtra("videoDescrip", result.description.content)
-                    intent.putExtra("videoLike", result.likeCount.toString())
-                    intent.putExtra("videoView", result.viewCount.toString())
-                    context.startActivity(intent)
-                }) { throwable: Throwable ->
-//                    println("erorrrr call description failed")
-                }
-
-
-        }
 
 
 //        //channel thumbnail + channel title
@@ -207,11 +186,3 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
 //            })
 //
 //        }
-
-    }
-
-    override fun getItemCount(): Int {
-        return trendItems.size
-    }
-
-}

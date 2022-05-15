@@ -9,27 +9,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myyoutube.Data.*
-import com.example.myyoutube.Network.ServiceBuilder
-import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
-import de.hdodenhof.circleimageview.CircleImageView
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class PlayerAdapter(val relatedItem: List<InfoItem>, val context: Context) :
-    RecyclerView.Adapter<PlayerAdapter.VH>() {
+class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context) :
+    RecyclerView.Adapter<RelatedPlayerAdapter.VH>() {
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val iv_videoThumbnailPlayerItem =
-            view.findViewById<ImageView>(R.id.iv_videoThumbnailPlayerItem)
-        val civ_channelImagePlayerItem =
-            view.findViewById<CircleImageView>(R.id.civ_channelImagePlayerItem)
-        val tv_videoTitlePlayerItem = view.findViewById<TextView>(R.id.tv_videoTitlePlayerItem)
-        val tv_channelTitlePlayerItem = view.findViewById<TextView>(R.id.tv_channelTitlePlayerItem)
+            view.findViewById<ImageView>(R.id.iv_videoThumbnailRelated)
+//        val civ_channelImagePlayerItem =
+//            view.findViewById<CircleImageView>(R.id.civ_channelImagePlayerItem)
+        val tv_videoTitlePlayerItem = view.findViewById<TextView>(R.id.tv_videoTitleRelated)
+        val tv_channelTitlePlayerItem = view.findViewById<TextView>(R.id.tv_channelTitleRelated)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -40,27 +33,28 @@ class PlayerAdapter(val relatedItem: List<InfoItem>, val context: Context) :
         val item = relatedItem[position] as StreamInfoItem
 
         // video thumbnail + video title
+        holder.tv_videoTitlePlayerItem.text = item.name
+
         Glide.with(holder.itemView.context)
             .load(item.thumbnailUrl)
             .into(holder.iv_videoThumbnailPlayerItem)
-        holder.tv_videoTitlePlayerItem.text = item.name
 
         // channel thumbnail + channel title
-        Glide.with(holder.itemView.context)
-            .load(item.uploaderAvatarUrl)
-            .into(holder.civ_channelImagePlayerItem)
         holder.tv_channelTitlePlayerItem.text = item.uploaderName
+
+//        Glide.with(holder.itemView.context)
+//            .load(item.uploaderAvatarUrl)
+//            .into(holder.civ_channelImagePlayerItem)
 
         /*
         ITEM CLICK LISTENER
          */
-//        holder.itemView.setOnClickListener { v : View ->
-//            Unit
-//            val intent = Intent(context, PlayerActivity::class.java)
-//            intent.putExtra("videoPlayerUrl", item.url)
-//            context.startActivity(intent)
-//
-//        }
+        holder.itemView.setOnClickListener { v : View ->
+            Unit
+            val intent = Intent(context, PlayerActivity::class.java)
+            intent.putExtra("videoUrl", item.url)
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="240dp"
-    android:layout_height="200dp"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -10,51 +10,44 @@
         android:layout_margin="4dp">
 
         <LinearLayout
-            android:weightSum="3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
             <ImageView
-                android:layout_weight="2"
-                android:id="@+id/iv_videoThumbnailPlayerItem"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:id="@+id/iv_videoThumbnailRelated"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/civ_channelImagePlayerItem"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="2dp" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_videoTitlePlayerItem"
+                        android:id="@+id/tv_videoTitleRelated"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
-                        android:maxLines="2"
+                        android:maxLines="3"
                         android:text="Title video \nTitle video"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/tv_channelTitlePlayerItem"
+                        android:gravity="bottom"
+                        android:id="@+id/tv_channelTitleRelated"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="4dp"
                         android:text="Title channel"
                         android:textSize="12sp" />

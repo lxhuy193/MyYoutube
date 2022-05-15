@@ -37,7 +37,7 @@ class CommentAdapter(val commentItems: List<CommentsInfoItem>, val context: Cont
         holder.tv_likeCount.text = commentItems[position].likeCount.toString()
 //        holder.tv_cmtCount.text = commentItems[position].
         holder.tv_cmtContent.text = commentItems[position].commentText
-        holder.tv_cmtTime.text = commentItems[position].uploadDate.toString()
+        holder.tv_cmtTime.text = commentItems[position].textualUploadDate
 
     }
 
