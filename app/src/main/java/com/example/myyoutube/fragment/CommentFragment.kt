@@ -19,8 +19,6 @@ import com.example.myyoutube.adapter.TrendingAdapter
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.schabi.newpipe.extractor.comments.CommentsInfo
 import org.schabi.newpipe.extractor.kiosk.KioskInfo
 

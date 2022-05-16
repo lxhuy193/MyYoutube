@@ -85,8 +85,6 @@ dependencies {
     //custom UI utube player
 //    implementation 'com.dptsolutions.customuiyoutubeplayer:customuiyoutubeplayer:0.1'
 
-    //for transfer data from activity to fragments in viewpager
-    implementation("org.greenrobot:eventbus:3.3.1")
 
 
 }

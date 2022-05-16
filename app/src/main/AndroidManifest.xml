@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyYoutube">
         <activity
+            android:name=".activity.ChannelDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -32,10 +35,10 @@
         <activity
             android:name=".activity.PlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
-            android:excludeFromRecents="true"
             android:taskAffinity=".PlayerActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -46,7 +49,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:hardwareAccelerated="true"
             android:resizeableActivity="true"
-            android:supportsPictureInPicture="true"/>
+            android:supportsPictureInPicture="true" />
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.Page;
+import org.schabi.newpipe.extractor.channel.ChannelInfo;
 import org.schabi.newpipe.extractor.comments.CommentsInfo;
 import org.schabi.newpipe.extractor.comments.CommentsInfoItem;
 import org.schabi.newpipe.extractor.kiosk.KioskInfo;
@@ -36,7 +37,6 @@ public final class ExtractorHelper {
 
     //Search
     //serviceId = 0
-    //
     public static Single<SearchInfo> searchFor(final int serviceId, final String searchString,
                                                final List<String> contentFilter,
                                                final String sortFilter) {
@@ -60,6 +60,15 @@ public final class ExtractorHelper {
                                                  final boolean forceLoad) {
         return checkCache(forceLoad, serviceId, url, InfoItem.InfoType.PLAYLIST,
                 Single.fromCallable(() -> KioskInfo.getInfo(NewPipe.getService(serviceId), url)));
+    }
+
+    //channel detail
+    public static Single<ChannelInfo> getChannelInfo(final int serviceId, final String url,
+                                                     final boolean forceLoad) {
+        checkServiceId(serviceId);
+        return checkCache(forceLoad, serviceId, url, InfoItem.InfoType.CHANNEL,
+                Single.fromCallable(() ->
+                        ChannelInfo.getInfo(NewPipe.getService(serviceId), url)));
     }
 
     public static Single<PlaylistInfo> getPlaylistInfo(final int serviceId,

@@ -6,9 +6,20 @@
     tools:context=".fragment.DescriptionFragment">
 
     <LinearLayout
+        android:paddingBottom="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBarDescrip"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:indeterminate="true"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateTint="#282828"
+            android:scaleY="4" />
 
         <!--View Like Date-->
         <LinearLayout

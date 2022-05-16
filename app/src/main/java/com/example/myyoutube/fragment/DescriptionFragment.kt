@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.myyoutube.R
 import com.example.myyoutube.activity.PlayerActivity
@@ -31,6 +32,9 @@ class DescriptionFragment : Fragment() {
         tv_videoLikePlayer.text = PlayerActivity.videoLike
         tv_videoDatePlayer.text = PlayerActivity.videoDate
         tv_videoDescripPlayer.text = PlayerActivity.videoDescrip
+
+        val progressBarDescrip = view.findViewById<ProgressBar>(R.id.progressBarDescrip)
+        progressBarDescrip.visibility = View.GONE
 
     }
 }

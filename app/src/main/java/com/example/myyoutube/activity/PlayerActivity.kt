@@ -50,7 +50,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.greenrobot.eventbus.EventBus
+import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.comments.CommentsInfo
 import org.schabi.newpipe.extractor.kiosk.KioskInfo
 import org.schabi.newpipe.extractor.stream.StreamInfo
@@ -87,6 +87,7 @@ class PlayerActivity : AppCompatActivity() {
         var videoLike: String ?= null
         var videoDate: String ?= null
         var videoDescrip: String ?= null
+        var channelUrl: String ?= null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +95,8 @@ class PlayerActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR);
         supportActionBar?.hide()
         setContentView(R.layout.activity_player)
+
+        println("LINHDIENN")
 
         /*
         INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
@@ -145,9 +148,25 @@ class PlayerActivity : AppCompatActivity() {
                 videoLike = result.likeCount.toString()
                 tv_channelTitlePlayer.text = result.uploaderName
 
+                channelUrl = result.uploaderUrl
+                println("channell " + channelUrl)
+
                 civ_channelIhumbnailPlayer = findViewById(R.id.civ_channelThumbnailPlayer)
                 Glide.with(this).load(result.uploaderAvatarUrl)
                     .into(civ_channelIhumbnailPlayer)
+
+                /*
+                GET CHANNEL URL
+                 */
+                ExtractorHelper.getChannelInfo(0, channelUrl.toString(), false)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ result1: ChannelInfo ->
+                        println("sacmac " + result1.subscriberCount)
+                    }){ throwable: Throwable ->
+                        println("erorrrr call getChannelInfo failed" + throwable)
+                    }
+
             }) { throwable: Throwable ->
                 println("erorrrr call getStreamInfo failed")
             }
@@ -195,64 +214,15 @@ class PlayerActivity : AppCompatActivity() {
         initPictureInPicture()
 
         /*
-        COMMENT VIDEO
+        SET ONCLICKLISTENER click_channelPlayer
          */
-//        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
-//
-//        ExtractorHelper.getCommentsInfo(0, videoUrl, false)
-//            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({ result: CommentsInfo ->
-//                rcv_comment.apply {
-//                    setHasFixedSize(true)
-//                    layoutManager = LinearLayoutManager(context)
-//                    adapter = CommentAdapter(result.relatedItems, context)
-//                }
-//            }) { throwable: Throwable ->
-////                    println("erorrrr call description failed")
-//            }
 
-        /*
-        RELATED VIDEO
-         */
-//        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
-//        ExtractorHelper.getStreamInfo(0, videoUrl, true)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                { streamInfo: StreamInfo ->
-//                    println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
-//                    rcv_playerRelated.apply {
-//                        setHasFixedSize(true)
-//                        layoutManager = LinearLayoutManager(context)
-//                        adapter =
-//                            PlayerAdapter(RelatedItemInfo.getInfo(streamInfo).relatedItems, context)
-//                    }
-//                }
-//            ) { exception: Throwable? ->
-//                println("error")
-//            }
-
-//        /*
-//        DATA TO VIEW PAGER
-//        */
-//        val bundle = Bundle()
-//        val fragment = CommentFragment()
-//        val myMessage = "Stackoverflow is cool!"
-//        bundle.putString("message", myMessage)
-//        fragment.arguments = bundle
-//        supportFragmentManager.beginTransaction().replace(R.id.vp_player, fragment).commit()
-
-//        val bundle = Bundle()
-//        val temp = "YESSSS"
-//        bundle.putString("banhmi", temp)
-//        var commentFragment = CommentFragment()
-//        commentFragment.arguments = bundle
-
-//        args.putStringArrayList("argument_name", myListInString);
-//        MyFragment fragment = new MyFragment();
-//        fragment.setArguments(args);
-//        fragment.show(fragmentTransaction, "fragment_tag")
-
+        val click_channelPlayer = findViewById<LinearLayout>(R.id.click_channelPlayer)
+        click_channelPlayer.setOnClickListener {
+            val intentToChannel = Intent(this, ChannelDetailActivity::class.java)
+            intentToChannel.putExtra("channelUrl", channelUrl)
+            startActivity(intentToChannel)
+        }
     }
 
     /*
@@ -340,6 +310,64 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 }
+/*
+        COMMENT VIDEO
+         */
+//        val rcv_comment = findViewById<RecyclerView>(R.id.rcv_comment)
+//
+//        ExtractorHelper.getCommentsInfo(0, videoUrl, false)
+//            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ result: CommentsInfo ->
+//                rcv_comment.apply {
+//                    setHasFixedSize(true)
+//                    layoutManager = LinearLayoutManager(context)
+//                    adapter = CommentAdapter(result.relatedItems, context)
+//                }
+//            }) { throwable: Throwable ->
+////                    println("erorrrr call description failed")
+//            }
+
+/*
+RELATED VIDEO
+ */
+//        val rcv_playerRelated = findViewById<RecyclerView>(R.id.rcv_playerRelated)
+//        ExtractorHelper.getStreamInfo(0, videoUrl, true)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(
+//                { streamInfo: StreamInfo ->
+//                    println("relatedItem: " + RelatedItemInfo.getInfo(streamInfo).relatedItems)
+//                    rcv_playerRelated.apply {
+//                        setHasFixedSize(true)
+//                        layoutManager = LinearLayoutManager(context)
+//                        adapter =
+//                            PlayerAdapter(RelatedItemInfo.getInfo(streamInfo).relatedItems, context)
+//                    }
+//                }
+//            ) { exception: Throwable? ->
+//                println("error")
+//            }
+
+//        /*
+//        DATA TO VIEW PAGER
+//        */
+//        val bundle = Bundle()
+//        val fragment = CommentFragment()
+//        val myMessage = "Stackoverflow is cool!"
+//        bundle.putString("message", myMessage)
+//        fragment.arguments = bundle
+//        supportFragmentManager.beginTransaction().replace(R.id.vp_player, fragment).commit()
+
+//        val bundle = Bundle()
+//        val temp = "YESSSS"
+//        bundle.putString("banhmi", temp)
+//        var commentFragment = CommentFragment()
+//        commentFragment.arguments = bundle
+
+//        args.putStringArrayList("argument_name", myListInString);
+//        MyFragment fragment = new MyFragment();
+//        fragment.setArguments(args);
+//        fragment.show(fragmentTransaction, "fragment_tag")
 
 /*
 Picture in picture
