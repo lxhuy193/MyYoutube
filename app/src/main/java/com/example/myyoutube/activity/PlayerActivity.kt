@@ -69,7 +69,8 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var tv_videoTitlePlayer: TextView
     lateinit var civ_channelIhumbnailPlayer: CircleImageView
     lateinit var tv_channelTitlePlayer: TextView
-//    lateinit var tv_videoDatePlayer: TextView
+
+    //    lateinit var tv_videoDatePlayer: TextView
 //    lateinit var tv_videoDescripPlayer: TextView
 //    lateinit var tv_videoViewPlayer: TextView
 //    lateinit var tv_videoLikePlayer: TextView
@@ -81,13 +82,12 @@ class PlayerActivity : AppCompatActivity() {
     */
 
     companion object {
-        //        val intent =
-        var videoUrl: String ?= null
-        var videoView: String ?= null
-        var videoLike: String ?= null
-        var videoDate: String ?= null
-        var videoDescrip: String ?= null
-        var channelUrl: String ?= null
+        var videoUrl: String? = null
+        var videoView: String? = null
+        var videoLike: String? = null
+        var videoDate: String? = null
+        var videoDescrip: String? = null
+        var channelUrl: String? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,8 +95,6 @@ class PlayerActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTION_BAR);
         supportActionBar?.hide()
         setContentView(R.layout.activity_player)
-
-        println("LINHDIENN")
 
         /*
         INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER VIDEO IN TRENDING LIST
@@ -163,7 +161,7 @@ class PlayerActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result1: ChannelInfo ->
                         println("sacmac " + result1.subscriberCount)
-                    }){ throwable: Throwable ->
+                    }) { throwable: Throwable ->
                         println("erorrrr call getChannelInfo failed" + throwable)
                     }
 
@@ -195,6 +193,16 @@ class PlayerActivity : AppCompatActivity() {
          */
         val videoId = videoUrl!!.substringAfterLast("=")
 
+        if (videoId == null){
+            println("videoIddd1 " + videoId)
+            Toast.makeText(this, "ID NULLLLLLL", Toast.LENGTH_SHORT).show()
+        }else{
+            println("videoIddd2 " + videoId)
+            Toast.makeText(this, "VideoIdddd okkkkkk", Toast.LENGTH_SHORT).show()
+        }
+
+        val progressBarPlayer = findViewById<ProgressBar>(R.id.progressBarPlayer)
+
         utubePlayer = findViewById<YouTubePlayerView>(R.id.utubePlayer)
         lifecycle.addObserver(utubePlayer)
 
@@ -202,6 +210,7 @@ class PlayerActivity : AppCompatActivity() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                 val id = videoId
                 youTubePlayer.loadVideo(id, 0f)
+                progressBarPlayer.visibility = View.GONE
                 youTubePlayer.play()
 
                 setPlaybackSpeedButtonsClickListeners(youTubePlayer)
@@ -216,7 +225,6 @@ class PlayerActivity : AppCompatActivity() {
         /*
         SET ONCLICKLISTENER click_channelPlayer
          */
-
         val click_channelPlayer = findViewById<LinearLayout>(R.id.click_channelPlayer)
         click_channelPlayer.setOnClickListener {
             val intentToChannel = Intent(this, ChannelDetailActivity::class.java)

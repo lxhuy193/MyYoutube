@@ -51,13 +51,14 @@ class SearchAdapter(val searchItem: List<InfoItem>, val context: Context) :
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = searchItem[position] as StreamInfoItem
 
-        Glide.with(holder.itemView.context).load(searchItem[position].thumbnailUrl).into(holder.iv_thumbNail)
-        Glide.with(holder.itemView.context).load(item.uploaderUrl).into(holder.civ_channelImage)
+        Glide.with(holder.itemView.context).load(item.thumbnailUrl).into(holder.iv_thumbNail)
+        Glide.with(holder.itemView.context).load(item.uploaderAvatarUrl).into(holder.civ_channelImage)
         holder.tv_videoTitle.text = searchItem[position].name
         holder.tv_channelTitle.text = item.uploaderName
 
         //get VideoId + videoView + channelThumbnail + channelName
-        val videoId = searchItem[position].url.substringAfterLast("=")
+        val videoUrl = item.url
+        val videoId = videoUrl.substringAfterLast("=")
         val videoView = item.viewCount
         val videoDate = item.textualUploadDate
         val videoTitle = item.name
@@ -68,10 +69,9 @@ class SearchAdapter(val searchItem: List<InfoItem>, val context: Context) :
 
         holder.itemView.setOnClickListener { v: View ->
             Unit
-            //short description used for demo description before expand
-//            Log.i("heyhey", searchItem[position].shortDescription)
 
             val intent = Intent(context, PlayerActivity::class.java)
+            intent.putExtra("videoUrl", videoUrl)
             intent.putExtra("videoId", videoId)
             intent.putExtra("videoView", videoView)
             intent.putExtra("videoTitle", videoTitle)

@@ -41,7 +41,7 @@ class SearchActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-//        progressBar = findViewById(R.id.progressBarSearch)
+        progressBar = findViewById(R.id.progressBarSearch)
         recyclerView = findViewById(R.id.recyclerViewSearch)
         toolBar = findViewById(R.id.toolBar)
         imgBtn = findViewById(R.id.imgBtn)
@@ -55,7 +55,6 @@ class SearchActivity : AppCompatActivity() {
 
         //HIDE ACTION BAR
         supportActionBar?.hide()
-
 
         tiet_search.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -72,7 +71,7 @@ class SearchActivity : AppCompatActivity() {
                         event: KeyEvent?
                     ): Boolean {
                         if (actionId == EditorInfo.IME_ACTION_DONE) {
-
+                            progressBar.visibility = View.VISIBLE
                             ExtractorHelper.searchFor(
                                 0,
                                 s.toString(),
@@ -88,7 +87,6 @@ class SearchActivity : AppCompatActivity() {
                                             resultStream.add(i)
                                         }
                                     }
-//
 //                                    ExtractorHelper.getStreamInfo(0, resultStream[0].url, true)
 //                                        .subscribeOn(Schedulers.io())
 //                                        .observeOn(AndroidSchedulers.mainThread())
@@ -99,6 +97,7 @@ class SearchActivity : AppCompatActivity() {
 //                                        ) { exception: Throwable? ->
 //                                            println("error")
 //                                        }
+                                    progressBar.visibility = View.GONE
                                     recyclerView.apply {
                                         setHasFixedSize(true)
                                         layoutManager = LinearLayoutManager(context)

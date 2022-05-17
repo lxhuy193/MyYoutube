@@ -6,6 +6,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imgBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#FF0000"
+                    android:src="@drawable/ic_arrow_back_24" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="@color/purple_500"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiet_search"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Find your favorite"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="16dp" />
+
+                    <!--                            <EditText-->
+                    <!--                                android:layout_width="match_parent"-->
+                    <!--                                android:layout_height="match_parent"-->
+                    <!--                                android:gravity="center_vertical"-->
+                    <!--                                android:hint="Search"-->
+                    <!--                                android:maxLines="1"-->
+                    <!--                                android:textColorHint="@color/white"-->
+                    <!--                                android:textSize="18sp" />-->
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,74 +73,16 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.google.android.material.appbar.AppBarLayout
+            <ProgressBar
+                android:visibility="gone"
+                android:id="@+id/progressBarSearch"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:id="@+id/imgBtn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:backgroundTint="#FF0000"
-                            android:src="@drawable/ic_arrow_back_24" />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/textInputLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:boxBackgroundColor="@color/purple_500"
-                            app:endIconMode="clear_text"
-                            app:endIconTint="@color/white">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/tiet_search"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:hint="Find your favorite"
-                                android:imeOptions="actionDone"
-                                android:inputType="text"
-                                android:maxLines="1"
-                                android:lines="1"
-                                android:textColor="@color/white"
-                                android:textColorHint="@color/white"
-                                android:textSize="16dp" />
-
-                            <!--                            <EditText-->
-                            <!--                                android:layout_width="match_parent"-->
-                            <!--                                android:layout_height="match_parent"-->
-                            <!--                                android:gravity="center_vertical"-->
-                            <!--                                android:hint="Search"-->
-                            <!--                                android:maxLines="1"-->
-                            <!--                                android:textColorHint="@color/white"-->
-                            <!--                                android:textSize="18sp" />-->
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </LinearLayout>
-                </androidx.appcompat.widget.Toolbar>
-            </com.google.android.material.appbar.AppBarLayout>
-
-
-            <!--            <ProgressBar-->
-            <!--                android:id="@+id/progressBarSearch"-->
-            <!--                style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="5dp"-->
-            <!--                android:indeterminate="true"-->
-            <!--                android:indeterminateBehavior="repeat"-->
-            <!--                android:indeterminateTint="#282828"-->
-            <!--                android:scaleY="4" />-->
+                android:layout_height="5dp"
+                android:indeterminate="true"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateTint="#282828"
+                android:scaleY="4" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewSearch"
