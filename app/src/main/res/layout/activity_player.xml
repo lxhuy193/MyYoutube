@@ -206,26 +206,26 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:visibility="gone">-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_playerRelated"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:itemCount="1"
-                tools:listitem="@layout/item_related" />
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/rcv_playerRelated"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:itemCount="1"-->
+<!--                tools:listitem="@layout/item_related" />-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:itemCount="1"
-                tools:listitem="@layout/item_comment" />
-        </LinearLayout>
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/rcv_comment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:itemCount="1"-->
+<!--                tools:listitem="@layout/item_comment" />-->
+<!--        </LinearLayout>-->
     </LinearLayout>
 
 </LinearLayout>

@@ -2,12 +2,14 @@ package com.example.myyoutube.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,6 +17,9 @@ import com.example.myyoutube.Data.TrendItem
 import com.example.myyoutube.R
 import com.example.myyoutube.activity.MainActivity
 import com.example.myyoutube.activity.PlayerActivity
+import com.example.myyoutube.activity.PlayerTempActivity
+import com.example.myyoutube.fragment.PlayerTempFragment
+import com.example.myyoutube.fragment.TrendingMusicFragment
 //import com.example.myyoutube.activity.PlayerTempActivity
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 //import com.google.android.youtube.player.internal.i
@@ -26,10 +31,17 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import androidx.fragment.app.FragmentActivity
+import com.example.myyoutube.fragment.PlayerFragment
 
 
 class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context) :
     RecyclerView.Adapter<TrendingAdapter.VH>() {
+
+    companion object {
+        var videoUrl: String? = null
+    }
+
     var onItemClick: ((TrendItem) -> Unit)? = null
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,26 +64,41 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
             .into(holder.civ_channelImage)
         holder.tv_videoTitle.text = trendItems[position].name
         holder.tv_channelTitle.text = trendItems[position].uploaderName
+//        holder.itemView.setOnClickListener { v: View ->
+//            Unit
+//            //short description used for demo description before expand
+////            Log.i("heyhey", trendItems[position].shortDescription)
+//            /*
+//            INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER
+//             */
+//            val intent = Intent("FINISH_ACTIVITY", null, context, PlayerTempActivity::class.java)
+//            LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent)
+//
+//            intent.putExtra("videoUrl", videoUrl)
+//
+//            context.startActivity(intent)
+//        }
 
-        val videoUrl = trendItems[position].url
+//        holder.itemView.setOnClickListener { v: View ->
+//            Unit
+//            var bundle = Bundle()
+//            bundle.putString("videoUrl", videoUrl)
+//            var frag = PlayerTempFragment()
+//            frag.arguments = bundle
+//            var activity = holder.itemView.context as AppCompatActivity
+//            activity.supportFragmentManager.beginTransaction().remove(TrendingMusicFragment(),).commit()
+//            activity.supportFragmentManager.beginTransaction().replace(R.id.vp_main, frag).commitNow()
+//
+//            println("TrendingAdapter " + videoUrl)
+//        }
 
-
-        holder.itemView.setOnClickListener { v: View ->
+        holder.itemView.setOnClickListener { v : View ->
             Unit
-            //short description used for demo description before expand
-//            Log.i("heyhey", trendItems[position].shortDescription)
-            /*
-            INTENT WITH "FINISH_ACTIVITY" TO KILL PREVIOUS ACTIVITY WHEN CLICK ANOTHER
-             */
-            val intent = Intent("FINISH_ACTIVITY", null, context, PlayerActivity::class.java)
-            LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent)
-
-            intent.putExtra("videoUrl", videoUrl)
-
-            context.startActivity(intent)
-
-
+            videoUrl = trendItems[position].url
+            (context as MainActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.container, PlayerFragment()).commit()
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -103,7 +130,6 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
 //
 //            })
 //        }
-
 
 
 //        //channel thumbnail + channel title

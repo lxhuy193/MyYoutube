@@ -5,6 +5,7 @@
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2388888888888889" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.106" />
+        <entry key="app/src/main/res/drawable/bg_motion_layout.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/drawable/ic_arrow_down.xml" value="0.1565" />
         <entry key="app/src/main/res/drawable/ic_arrow_up.xml" value="0.1565" />
         <entry key="app/src/main/res/drawable/ic_comment_24.xml" value="0.106" />
@@ -16,12 +17,14 @@
         <entry key="app/src/main/res/layout/activity_channel_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16893115942028986" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_player_temp.xml" value="0.14074074074074075" />
+        <entry key="app/src/main/res/layout/activity_player_temp.xml" value="0.18888888888888888" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.25" />
         <entry key="app/src/main/res/layout/expandable_videodis.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/expandable_videotitle.xml" value="0.19479166666666667" />
-        <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.24635416666666668" />
+        <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.23308270676691728" />
         <entry key="app/src/main/res/layout/fragment_description.xml" value="0.2604166666666667" />
+        <entry key="app/src/main/res/layout/fragment_player.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_player_temp.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_random.xml" value="0.20094057289439932" />
         <entry key="app/src/main/res/layout/fragment_related_video.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.125" />

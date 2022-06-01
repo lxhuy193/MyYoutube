@@ -1,32 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:layoutDescription="@xml/activity_player_temp_scene">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginEnd="411dp"
+        android:indeterminate="true"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateTint="#282828"
+        android:scaleY="4"
+        app:layout_constraintBottom_toTopOf="@+id/utubePlayer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/bg_motion_layout"
+        android:id="@+id/playerContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="231dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:paddingBottom="48dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            app:tabIndicatorGravity="top"
-            app:tabIconTint="?attr/colorAccent"
-            app:tabGravity="fill"
-            app:elevation="16dp"/>
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/utubePlayer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/playerContainer"
+        app:layout_constraintStart_toStartOf="@+id/playerContainer"
+        app:layout_constraintTop_toTopOf="@+id/playerContainer" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</FrameLayout>
+    <ImageView
+        android:id="@+id/iv_motionClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="@id/playerContainer"
+        app:layout_constraintEnd_toEndOf="@id/playerContainer"
+        app:layout_constraintTop_toTopOf="@id/playerContainer"
+        app:srcCompat="@drawable/ic_close_24" />
+
+    <ImageView
+        android:id="@+id/iv_motionPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_motionClose"
+        app:layout_constraintEnd_toStartOf="@+id/iv_motionClose"
+        app:layout_constraintTop_toTopOf="@+id/iv_motionClose"
+        app:srcCompat="@drawable/ic_pause_24" />
+
+    <TextView
+        android:id="@+id/tv_motionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:alpha="0"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_motionPlay"
+        app:layout_constraintEnd_toStartOf="@+id/iv_motionPlay"
+        app:layout_constraintStart_toEndOf="@+id/utubePlayer"
+        app:layout_constraintTop_toTopOf="@+id/iv_motionPlay" />
+
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/settingContainer"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/playerContainer"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal">-->
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/imgBtn_pip"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginVertical="8dp"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:background="@android:color/transparent"-->
+    <!--            android:src="@drawable/ic_picture_in_picture_24" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/playback_speed_0_25"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:backgroundTint="@android:color/white"-->
+    <!--            android:text="0.25"-->
+    <!--            android:textColor="@color/black" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/playback_speed_0_5"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:backgroundTint="@android:color/white"-->
+    <!--            android:text="0.5"-->
+    <!--            android:textColor="@color/black" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/playback_speed_1"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:backgroundTint="@android:color/white"-->
+    <!--            android:text="1"-->
+    <!--            android:textColor="@color/black" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/playback_speed_1_5"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:backgroundTint="@android:color/white"-->
+    <!--            android:text="1.5"-->
+    <!--            android:textColor="@color/black" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/playback_speed_2"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:backgroundTint="@android:color/white"-->
+    <!--            android:text="2"-->
+    <!--            android:textColor="@color/black" />-->
+    <!--    </LinearLayout>-->
+
+    <!--    <LinearLayout-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/settingContainer"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:orientation="vertical">-->
+
+    <!--        <androidx.cardview.widget.CardView-->
+    <!--            android:id="@+id/cardView"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:elevation="0dp">-->
+
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:orientation="vertical">-->
+
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:orientation="vertical"-->
+    <!--                    android:paddingHorizontal="4dp">-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/tv_videoTitlePlayer"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginBottom="2dp"-->
+    <!--                        android:maxLines="2"-->
+    <!--                        android:text="VIDEO TITLE"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="16sp"-->
+    <!--                        android:textStyle="bold" />-->
+
+    <!--                    <LinearLayout-->
+    <!--                        android:id="@+id/click_channelPlayer"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginVertical="2dp"-->
+    <!--                        android:orientation="horizontal">-->
+
+    <!--                        <de.hdodenhof.circleimageview.CircleImageView-->
+    <!--                            android:id="@+id/civ_channelThumbnailPlayer"-->
+    <!--                            android:layout_width="40dp"-->
+    <!--                            android:layout_height="40dp"-->
+    <!--                            android:layout_gravity="center"-->
+    <!--                            app:civ_border_color="@color/purple_500"-->
+    <!--                            app:civ_border_width="2dp" />-->
+
+    <!--                        <LinearLayout-->
+    <!--                            android:layout_width="match_parent"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_gravity="center"-->
+    <!--                            android:layout_marginStart="4dp"-->
+    <!--                            android:orientation="vertical">-->
+
+    <!--                            <TextView-->
+    <!--                                android:id="@+id/tv_channelTitlePlayer"-->
+    <!--                                android:layout_width="match_parent"-->
+    <!--                                android:layout_height="wrap_content"-->
+    <!--                                android:layout_margin="2dp"-->
+    <!--                                android:text="Channel Title"-->
+    <!--                                android:textColor="@color/black"-->
+    <!--                                android:textStyle="bold" />-->
+    <!--                        </LinearLayout>-->
+
+    <!--                    </LinearLayout>-->
+
+    <!--                </LinearLayout>-->
+
+    <!--            </LinearLayout>-->
+
+    <!--        </androidx.cardview.widget.CardView>-->
+
+    <!--        <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent">-->
+
+    <!--            <androidx.viewpager.widget.ViewPager-->
+    <!--                android:id="@+id/vp_player"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="match_parent"-->
+    <!--                android:paddingBottom="48dp" />-->
+
+    <!--            <com.google.android.material.tabs.TabLayout-->
+    <!--                android:id="@+id/tl_player"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="bottom|center"-->
+    <!--                android:background="#FF0000"-->
+    <!--                app:tabGravity="fill"-->
+    <!--                app:tabIndicatorColor="@color/white"-->
+    <!--                app:tabIndicatorGravity="top" />-->
+    <!--        </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
+    <!--    </LinearLayout>-->
+</androidx.constraintlayout.motion.widget.MotionLayout>

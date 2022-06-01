@@ -34,7 +34,7 @@ class CommentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val videoUrlCmt = PlayerActivity.videoUrl
+        val videoUrlCmt = PlayerFragment.videoUrl
 
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBarCmt)
         val rcv_commentPlayer = view.findViewById<RecyclerView>(R.id.rcv_commentPlayer)

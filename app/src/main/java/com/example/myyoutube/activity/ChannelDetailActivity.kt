@@ -24,8 +24,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import androidx.core.app.ActivityCompat.startActivityForResult
-
-
+import com.example.myyoutube.fragment.PlayerFragment
 
 
 class ChannelDetailActivity : AppCompatActivity() {
@@ -34,7 +33,8 @@ class ChannelDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_channel_detail)
 
         val intent = intent
-        val channelUrl = intent.getStringExtra("channelUrl")
+//        val channelUrl = intent.getStringExtra("channelUrl")
+        val channelUrl = PlayerFragment.channelUrl
         val rcv_channelVideo = findViewById<RecyclerView>(R.id.rcv_channelVideo)
         val iv_channelBanner = findViewById<ImageView>(R.id.iv_channelBanner)
         val civ_channelAvatar = findViewById<CircleImageView>(R.id.civ_channelAvatar)

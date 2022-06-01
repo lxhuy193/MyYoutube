@@ -28,10 +28,10 @@ class DescriptionFragment : Fragment() {
         val tv_videoDatePlayer = view.findViewById<TextView>(R.id.tv_videoDatePlayer)
         val tv_videoDescripPlayer = view.findViewById<TextView>(R.id.tv_videoDescripPlayer)
 
-        tv_videoViewPlayer.text = PlayerActivity.videoView
-        tv_videoLikePlayer.text = PlayerActivity.videoLike
-        tv_videoDatePlayer.text = PlayerActivity.videoDate
-        tv_videoDescripPlayer.text = PlayerActivity.videoDescrip
+        tv_videoViewPlayer.text = PlayerFragment.videoView
+        tv_videoLikePlayer.text = PlayerFragment.videoLike
+        tv_videoDatePlayer.text = PlayerFragment.videoDate
+        tv_videoDescripPlayer.text = PlayerFragment.videoDescrip
 
         val progressBarDescrip = view.findViewById<ProgressBar>(R.id.progressBarDescrip)
         progressBarDescrip.visibility = View.GONE

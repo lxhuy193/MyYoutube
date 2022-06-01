@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -24,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        window.requestFeature(Window.FEATURE_ACTION_BAR);
+//        supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
         //TabLayout + viewpager

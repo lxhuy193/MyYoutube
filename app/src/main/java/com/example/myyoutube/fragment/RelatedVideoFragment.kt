@@ -29,7 +29,7 @@ class RelatedVideoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val videoUrRelated = PlayerActivity.videoUrl
+        val videoUrRelated = PlayerFragment.videoUrl
 
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBarRelated)
         val rcv_relatedVideo = view.findViewById<RecyclerView>(R.id.rcv_relatedVideo)

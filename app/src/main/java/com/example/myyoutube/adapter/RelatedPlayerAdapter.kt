@@ -1,5 +1,6 @@
 package com.example.myyoutube.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -11,11 +12,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
+import com.example.myyoutube.activity.MainActivity
+import com.example.myyoutube.fragment.PlayerFragment
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context) :
     RecyclerView.Adapter<RelatedPlayerAdapter.VH>() {
+    companion object {
+        var videoUrl: String? = null
+    }
+
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val iv_videoThumbnailPlayerItem =
             view.findViewById<ImageView>(R.id.iv_videoThumbnailRelated)
@@ -51,9 +58,14 @@ class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context
          */
         holder.itemView.setOnClickListener { v : View ->
             Unit
-            val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("videoUrl", item.url)
-            context.startActivity(intent)
+            videoUrl = relatedItem[position].url
+            (context as MainActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.container, PlayerFragment()).commit()
+
+//            val intent = Intent(context, PlayerActivity::class.java)
+//            intent.putExtra("videoUrl", item.url)
+//            context.startActivity(intent)
+//            (context as PlayerActivity).finish()
         }
     }
 

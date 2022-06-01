@@ -193,10 +193,10 @@ class PlayerActivity : AppCompatActivity() {
          */
         val videoId = videoUrl!!.substringAfterLast("=")
 
-        if (videoId == null){
+        if (videoId == null) {
             println("videoIddd1 " + videoId)
             Toast.makeText(this, "ID NULLLLLLL", Toast.LENGTH_SHORT).show()
-        }else{
+        } else {
             println("videoIddd2 " + videoId)
             Toast.makeText(this, "VideoIdddd okkkkkk", Toast.LENGTH_SHORT).show()
         }
