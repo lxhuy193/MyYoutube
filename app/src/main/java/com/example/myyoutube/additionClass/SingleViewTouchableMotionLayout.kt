@@ -22,7 +22,7 @@ import com.example.myyoutube.R
 class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeSet? = null) : MotionLayout(context, attributeSet) {
 
     private val viewToDetectTouch by lazy {
-        findViewById<View>(R.id.playerContainer) //TODO move to Attributes
+        findViewById<View>(R.id.linearLayout) //TODO move to Attributes
     }
     private val viewRect = Rect()
     private var touchStarted = false

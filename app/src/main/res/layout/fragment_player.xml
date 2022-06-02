@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.myyoutube.additionClass.SingleViewTouchableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/motionLayout"
@@ -79,11 +79,39 @@
         app:layout_constraintStart_toEndOf="@+id/utubePlayer"
         app:layout_constraintTop_toTopOf="@+id/iv_motionPlay" />
 
+    <TextView
+        android:id="@+id/tv_motionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:alpha="0"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_motionPlay"
+        app:layout_constraintEnd_toStartOf="@+id/iv_motionPlay"
+        app:layout_constraintStart_toEndOf="@+id/utubePlayer"
+        app:layout_constraintTop_toTopOf="@+id/iv_motionPlay" />
+
+<!--    <LinearLayout-->
+<!--        android:orientation="vertical"-->
+<!--        android:id="@+id/space"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="40dp"-->
+<!--        android:layout_marginStart="160dp"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/linearLayout"-->
+<!--        app:layout_constraintStart_toStartOf="@id/linearLayout"-->
+<!--        app:layout_constraintTop_toTopOf="@id/linearLayout"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/linearLayout"/>-->
+
+
     <LinearLayout
+        android:background="@color/white"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -184,14 +212,22 @@
                 android:text="Channel Title"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
-            <Space
-                android:id="@+id/space"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:background="@color/purple_200"-->
+<!--        android:orientation="vertical"-->
+<!--        android:id="@+id/space"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="40dp"-->
+<!--        android:layout_marginStart="160dp"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/linearLayout"-->
+<!--        app:layout_constraintStart_toStartOf="@id/linearLayout"-->
+<!--        app:layout_constraintTop_toTopOf="@id/linearLayout"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/linearLayout"/>-->
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -329,5 +365,6 @@
                     app:tabIndicatorGravity="top" />
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </LinearLayout>
+
     </ScrollView>
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</com.example.myyoutube.additionClass.SingleViewTouchableMotionLayout>

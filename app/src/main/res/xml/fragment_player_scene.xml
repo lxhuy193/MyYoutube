@@ -22,15 +22,13 @@
                 android:alpha="0"
                 motion:framePosition="95"
                 motion:motionTarget="@+id/tv_motionTitle" />
-            <!--            <KeyAttribute-->
-            <!--                android:alpha="0"-->
-            <!--                motion:framePosition="0"-->
-            <!--                motion:motionTarget="@+id/playerContainer" />-->
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/playerContainer" />
         </KeyFrameSet>
         <OnSwipe
             motion:dragDirection="dragDown"
-            motion:dragScale="6"
-            motion:maxAcceleration="40"
             motion:touchAnchorId="@+id/linearLayout"
             motion:touchAnchorSide="bottom" />
     </Transition>
@@ -115,10 +113,21 @@
             motion:layout_constraintTop_toBottomOf="@id/playerContainer" />
         <Constraint
             android:id="@+id/linearLayout"
-            motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            motion:layout_constraintTop_toBottomOf="@id/playerContainer"
-            motion:layout_constraintStart_toStartOf="parent" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintEnd_toStartOf="@id/iv_motionPlay"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="@id/playerContainer"
+            android:visibility="invisible" />
+<!--        <Constraint-->
+<!--            android:id="@+id/space"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginStart="0dp"-->
+<!--            android:layout_marginTop="0dp"-->
+<!--            motion:layout_constraintBottom_toBottomOf="@id/playerContainer"-->
+<!--            motion:layout_constraintEnd_toStartOf="@id/iv_motionPlay"-->
+<!--            motion:layout_constraintStart_toStartOf="@id/playerContainer"-->
+<!--            motion:layout_constraintTop_toTopOf="@id/playerContainer" />-->
     </ConstraintSet>
 </MotionScene>
