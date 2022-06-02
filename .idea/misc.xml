@@ -23,7 +23,7 @@
         <entry key="app/src/main/res/layout/expandable_videotitle.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.23308270676691728" />
         <entry key="app/src/main/res/layout/fragment_description.xml" value="0.2604166666666667" />
-        <entry key="app/src/main/res/layout/fragment_player.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_player.xml" value="0.125" />
         <entry key="app/src/main/res/layout/fragment_player_temp.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_random.xml" value="0.20094057289439932" />
         <entry key="app/src/main/res/layout/fragment_related_video.xml" value="0.19114583333333332" />

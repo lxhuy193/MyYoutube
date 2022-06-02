@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.myyoutube.additionClass.SingleViewTouchableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/motionLayout"
@@ -154,7 +154,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:maxLines="2"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="VIDEO TITLE"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -162,7 +163,7 @@
 
         <LinearLayout
             android:id="@+id/click_channelPlayer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -183,6 +184,11 @@
                 android:text="Channel Title"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
+
+            <Space
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>
@@ -324,4 +330,4 @@
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </LinearLayout>
     </ScrollView>
-</com.example.myyoutube.additionClass.SingleViewTouchableMotionLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

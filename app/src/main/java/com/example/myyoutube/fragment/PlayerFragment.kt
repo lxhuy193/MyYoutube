@@ -155,7 +155,8 @@ class PlayerFragment : Fragment() {
         /*
         SET ONCLICKLISTENER click_channelPlayer
          */
-        val click_channelPlayer = view.findViewById<LinearLayout>(R.id.click_channelPlayer)
+//        val click_channelPlayer = view.findViewById<LinearLayout>(R.id.click_channelPlayer)
+        val click_channelPlayer = view.findViewById<TextView>(R.id.tv_channelTitlePlayer)
         click_channelPlayer.setOnClickListener {
             goToChannel()
         }
