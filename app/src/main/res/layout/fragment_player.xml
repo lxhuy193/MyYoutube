@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="@+id/playerContainer"
         app:layout_constraintTop_toTopOf="@+id/playerContainer" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/iv_motionClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toTopOf="@id/playerContainer"
         app:srcCompat="@drawable/ic_close_24" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/iv_motionPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,21 +63,6 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_motionClose"
         app:layout_constraintTop_toTopOf="@+id/iv_motionClose"
         app:srcCompat="@drawable/ic_pause_24" />
-
-    <TextView
-        android:id="@+id/tv_motionTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:alpha="0"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_motionPlay"
-        app:layout_constraintEnd_toStartOf="@+id/iv_motionPlay"
-        app:layout_constraintStart_toEndOf="@+id/utubePlayer"
-        app:layout_constraintTop_toTopOf="@+id/iv_motionPlay" />
 
     <TextView
         android:id="@+id/tv_motionTitle"

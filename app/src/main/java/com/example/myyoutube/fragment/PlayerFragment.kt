@@ -1,6 +1,7 @@
 package com.example.myyoutube.fragment
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
@@ -32,12 +33,15 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.myyoutube.activity.ChannelDetailActivity
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 
 
 class PlayerFragment : Fragment() {
 
     private val TAG = "PLAYER_FRAGMENT"
+    private var paused = false
 
     companion object {
         var videoUrl: String? = null
@@ -104,18 +108,20 @@ class PlayerFragment : Fragment() {
         //(context as MainActivity).supportActionBar!!.elevation = 0F
 
         /*
-        GET PLAYER DETAIL BY VIDEO URL
+        GET PLAYER DETAIL BY VIDEO URL + MOTION LAYOUT DETAIL
          */
         val tv_videoTitlePlayer = view.findViewById<TextView>(R.id.tv_videoTitlePlayer)
         val tv_channelTitlePlayer = view.findViewById<TextView>(R.id.tv_channelTitlePlayer)
         val civ_channelIhumbnailPlayer =
             view.findViewById<CircleImageView>(R.id.civ_channelThumbnailPlayer)
+        val tv_motionTitle = view.findViewById<TextView>(R.id.tv_motionTitle)
 
         ExtractorHelper.getStreamInfo(0, videoUrl, false)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result: StreamInfo ->
                 tv_videoTitlePlayer.text = result.name
+                tv_motionTitle.text = result.name
                 tv_channelTitlePlayer.text = result.uploaderName
                 Glide.with(this).load(result.uploaderAvatarUrl)
                     .into(civ_channelIhumbnailPlayer)
@@ -160,6 +166,45 @@ class PlayerFragment : Fragment() {
         click_channelPlayer.setOnClickListener {
             goToChannel()
         }
+
+        /*
+        MOTION LAYOUT DETAIL
+         */
+
+        //CLOSE BUTTON
+        val iv_motionClose = view.findViewById<ImageView>(R.id.iv_motionClose)
+        iv_motionClose.setOnClickListener {
+            val motionLayout: MotionLayout? = null
+            motionLayout?.transitionToEnd()
+            val mainActivity = activity as MainActivity
+            mainActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            mainActivity.supportFragmentManager.beginTransaction().remove(this).commit()
+        }
+
+        //PLAY + PAUSE BUTTON
+//        var youTubePlayer : YouTubePlayer? = null
+        val iv_motionPlay = view.findViewById<ImageView>(R.id.iv_motionPlay)
+        iv_motionPlay.setOnClickListener {
+            paused = if (paused) {
+                iv_motionPlay.setImageResource(R.drawable.ic_pause_24)
+                youTubePlayerView.getYouTubePlayerWhenReady(object :
+                    YouTubePlayerCallback {
+                    override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.play()
+                    }
+                })
+                false
+            } else {
+                iv_motionPlay.setImageResource(R.drawable.ic_play_arrow_24)
+                youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback{
+                    override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.pause()
+                    }
+                })
+                true
+            }
+        }
+
     }
 
     public fun goToChannel() {

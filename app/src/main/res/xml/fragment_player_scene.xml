@@ -6,7 +6,7 @@
         android:id="@+id/yt_transition"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="100"
+        motion:duration="1000"
         motion:motionInterpolator="easeInOut">
 
         <KeyFrameSet>
