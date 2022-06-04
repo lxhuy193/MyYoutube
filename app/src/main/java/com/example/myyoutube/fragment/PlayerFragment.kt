@@ -219,8 +219,12 @@ class PlayerFragment : Fragment() {
                 val supportsPIP =
                     requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
                 if (supportsPIP) {
+                    val linearLayout = view?.findViewById<LinearLayout>(R.id.linearLayout)
+                    linearLayout?.visibility = View.GONE
+
                     Toast.makeText(activity, TAG, Toast.LENGTH_SHORT).show()
                     activity?.enterPictureInPictureMode()
+
                 }
             } else {
 //                AlertDialog.Builder(this)

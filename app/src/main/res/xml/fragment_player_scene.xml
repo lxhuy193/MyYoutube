@@ -6,7 +6,7 @@
         android:id="@+id/yt_transition"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000"
+        motion:duration="2000"
         motion:motionInterpolator="easeInOut">
 
         <KeyFrameSet>
@@ -26,6 +26,14 @@
                 android:alpha="0"
                 motion:framePosition="0"
                 motion:motionTarget="@+id/playerContainer" />
+            <KeyAttribute
+                motion:motionTarget="@+id/linearLayout"
+                motion:framePosition="20"
+                android:alpha="0" />
+            <KeyAttribute
+                motion:motionTarget="@+id/scrollView"
+                motion:framePosition="20"
+                android:alpha="0" />
         </KeyFrameSet>
         <OnSwipe
             motion:dragDirection="dragDown"
@@ -76,8 +84,7 @@
         <Constraint
             android:id="@+id/iv_motionPlay"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_height="0dp"
             android:alpha="1"
             motion:layout_constraintBottom_toBottomOf="@+id/iv_motionClose"
             motion:layout_constraintEnd_toStartOf="@+id/iv_motionClose"
@@ -85,8 +92,7 @@
         <Constraint
             android:id="@+id/iv_motionClose"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_height="0dp"
             android:alpha="1"
             motion:layout_constraintBottom_toBottomOf="@id/playerContainer"
             motion:layout_constraintEnd_toEndOf="@id/playerContainer"
@@ -95,12 +101,11 @@
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:alpha="0"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintHorizontal_bias="0.5"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/playerContainer"
-            motion:layout_constraintVertical_bias="1.0" />
+            motion:layout_constraintTop_toBottomOf="@id/playerContainer" />
         <Constraint
             android:id="@+id/progressBarPlayerFragment"
             android:layout_width="0dp"
@@ -118,7 +123,8 @@
             motion:layout_constraintEnd_toStartOf="@id/iv_motionPlay"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="@id/playerContainer"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:alpha="0" />
 <!--        <Constraint-->
 <!--            android:id="@+id/space"-->
 <!--            android:layout_width="0dp"-->
