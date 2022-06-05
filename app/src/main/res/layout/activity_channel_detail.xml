@@ -1,93 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.ChannelDetailActivity">
 
-    <RelativeLayout
+    <LinearLayout
+
+        android:id="@+id/containerChannel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.appbar.AppBarLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBarChannel"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:indeterminate="true"
-            android:indeterminateBehavior="repeat"
-            android:indeterminateTint="#282828"
-            android:scaleY="4" />
-
-        <ImageView
-            android:layout_below="@+id/progressBarChannel"
-            android:id="@+id/iv_channelBanner"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:src="@color/black" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/purple_500"
-            android:id="@+id/civ_channelAvatar"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_below="@+id/iv_channelBanner"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="-16dp"
-            android:src="@color/purple_500" />
-
-        <TextView
-            android:id="@+id/tv_channelName"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_channelBanner"
-            android:layout_marginStart="96dp"
-            android:layout_marginTop="4dp"
-            android:text="HELLOOOO"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/layout_channel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_channelName"
-            android:layout_alignStart="@+id/tv_channelName"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
+            <ProgressBar
+                android:id="@+id/progressBarChannel"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:indeterminate="true"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateTint="#282828"
+                android:scaleY="4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_channelBanner"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_below="@+id/progressBarChannel"
+                android:scaleType="centerCrop"
+                android:src="@color/black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progressBarChannel" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_channelAvatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_below="@+id/iv_channelBanner"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="-16dp"
+                android:src="@color/purple_500"
+                app:civ_border_color="@color/purple_500"
+                app:civ_border_width="2dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_channelBanner" />
+
+            <TextView
+                android:id="@+id/tv_channelName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_channelBanner"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:text="Channel Title"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/civ_channelAvatar"
+                app:layout_constraintTop_toBottomOf="@id/iv_channelBanner" />
 
             <TextView
                 android:id="@+id/tv_channelSubscribers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="193282" />
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:text="1932000"
+                app:layout_constraintLeft_toRightOf="@id/civ_channelAvatar"
+                app:layout_constraintTop_toBottomOf="@id/tv_channelName" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_channelVideo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="Subscribers" />
-        </LinearLayout>
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="16dp"
+                tools:listitem="@layout/item_related"
+                app:layout_constraintTop_toBottomOf="@id/tv_channelSubscribers"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_channelVideo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/layout_channel"
-            android:layout_marginVertical="16dp"
-            android:layout_marginHorizontal="8dp"
-            tools:listitem="@layout/item_related" />
 
-    </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+
+        <!--        <RelativeLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content">-->
+
+        <!--            <com.google.android.material.appbar.AppBarLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content">-->
+        <!--            </com.google.android.material.appbar.AppBarLayout>-->
+
+        <!--            <ProgressBar-->
+        <!--                android:id="@+id/progressBarChannel"-->
+        <!--                style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="5dp"-->
+        <!--                android:indeterminate="true"-->
+        <!--                android:indeterminateBehavior="repeat"-->
+        <!--                android:indeterminateTint="#282828"-->
+        <!--                android:scaleY="4" />-->
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/iv_channelBanner"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="80dp"-->
+        <!--                android:layout_below="@+id/progressBarChannel"-->
+        <!--                android:scaleType="centerCrop"-->
+        <!--                android:src="@color/black" />-->
+
+        <!--            <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--                android:id="@+id/civ_channelAvatar"-->
+        <!--                android:layout_width="64dp"-->
+        <!--                android:layout_height="64dp"-->
+        <!--                android:layout_below="@+id/iv_channelBanner"-->
+        <!--                android:layout_marginStart="16dp"-->
+        <!--                android:layout_marginTop="-16dp"-->
+        <!--                android:src="@color/purple_500"-->
+        <!--                app:civ_border_color="@color/purple_500"-->
+        <!--                app:civ_border_width="2dp" />-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/tv_channelName"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_below="@+id/iv_channelBanner"-->
+        <!--                android:layout_marginStart="96dp"-->
+        <!--                android:layout_marginTop="4dp"-->
+        <!--                android:text="HELLOOOO"-->
+        <!--                android:textColor="@color/black"-->
+        <!--                android:textSize="15sp"-->
+        <!--                android:textStyle="bold" />-->
+
+        <!--            <LinearLayout-->
+        <!--                android:id="@+id/layout_channel"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_below="@+id/tv_channelName"-->
+        <!--                android:layout_alignStart="@+id/tv_channelName"-->
+        <!--                android:layout_marginTop="4dp"-->
+        <!--                android:orientation="horizontal">-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tv_channelSubscribers"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="193282" />-->
+
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginStart="4dp"-->
+        <!--                    android:text="Subscribers" />-->
+        <!--            </LinearLayout>-->
+
+        <!--            <androidx.recyclerview.widget.RecyclerView-->
+        <!--                android:id="@+id/rcv_channelVideo"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_below="@+id/layout_channel"-->
+        <!--                android:layout_marginHorizontal="8dp"-->
+        <!--                android:layout_marginVertical="16dp"-->
+        <!--                tools:listitem="@layout/item_related" />-->
+
+        <!--        </RelativeLayout>-->
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

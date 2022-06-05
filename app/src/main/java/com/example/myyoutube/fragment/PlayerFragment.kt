@@ -35,6 +35,8 @@ import org.schabi.newpipe.extractor.stream.StreamInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.myyoutube.activity.ChannelDetailActivity
+import com.example.myyoutube.adapter.ChannelVideoAdapter
+import com.example.myyoutube.adapter.RelatedPlayerAdapter
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 
 
@@ -73,9 +75,18 @@ class PlayerFragment : Fragment() {
         /*
         YOUTUBE PLAYER VIEW
          */
-        val youTubePlayerView: YouTubePlayerView
-        videoUrl = TrendingAdapter.videoUrl
+        if (TrendingAdapter.clickCode == 1){
+            videoUrl = TrendingAdapter.videoUrl
+            TrendingAdapter.clickCode = 0
+        } else if (RelatedPlayerAdapter.clickCode == 2){
+            videoUrl = RelatedPlayerAdapter.videoUrl
+            RelatedPlayerAdapter.clickCode = 0
+        } else if (ChannelVideoAdapter.clickCode == 3){
+            videoUrl = ChannelVideoAdapter.videoUrl
+            ChannelVideoAdapter.clickCode = 0
+        }
 
+        val youTubePlayerView: YouTubePlayerView
         youTubePlayerView = view.findViewById(R.id.utubePlayer)
         lifecycle.addObserver(youTubePlayerView)
 

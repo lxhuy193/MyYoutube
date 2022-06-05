@@ -52,7 +52,7 @@ class ChannelDetailActivity : AppCompatActivity() {
                 Glide.with(this).load(result.avatarUrl).into(civ_channelAvatar)
                 tv_channelName.text = result.name
                 supportActionBar?.setTitle(result.name)
-                tv_channelSubscribers.text = result.subscriberCount.toString()
+                tv_channelSubscribers.text = result.subscriberCount.toString() + " Subscribers"
 
                 rcv_channelVideo.apply {
                     setHasFixedSize(true)

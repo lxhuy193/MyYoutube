@@ -21,6 +21,7 @@ class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context
     RecyclerView.Adapter<RelatedPlayerAdapter.VH>() {
     companion object {
         var videoUrl: String? = null
+        var clickCode: Int? = 0
     }
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
@@ -58,6 +59,7 @@ class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context
          */
         holder.itemView.setOnClickListener { v : View ->
             Unit
+            clickCode = 2
             videoUrl = relatedItem[position].url
             (context as MainActivity).supportFragmentManager.beginTransaction()
                 .replace(R.id.container, PlayerFragment()).commit()
