@@ -42,7 +42,7 @@ public class YoutubeTrendingExtractor extends KioskExtractor<StreamInfoItem> {
         final byte[] body = JsonWriter.string(prepareDesktopJsonBuilder(getExtractorLocalization(),
                 getExtractorContentCountry())
                 .value("browseId", "FEtrending")
-                .value("params","4gIKGgh0cmFpbGVycw%3D%3D")
+                .value("params","4gINGgt5dG1hX2NoYXJ0cw%3D%3D")
                 .done())
                 .getBytes(UTF_8);
         // @formatter:on
@@ -79,7 +79,7 @@ public class YoutubeTrendingExtractor extends KioskExtractor<StreamInfoItem> {
         StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
         final TimeAgoParser timeAgoParser = getTimeAgoParser();
         JsonArray itemSectionRenderers = initialData.getObject("contents")
-                .getObject("twoColumnBrowseResultsRenderer").getArray("tabs").getObject(3)
+                .getObject("twoColumnBrowseResultsRenderer").getArray("tabs").getObject(1)
                 .getObject("tabRenderer").getObject("content").getObject("sectionListRenderer")
                 .getArray("contents");
 

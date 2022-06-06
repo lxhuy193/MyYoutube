@@ -75,15 +75,18 @@ class PlayerFragment : Fragment() {
         /*
         YOUTUBE PLAYER VIEW
          */
-        if (TrendingAdapter.clickCode == 1){
+        if (TrendingAdapter.clickCode == 1) {
             videoUrl = TrendingAdapter.videoUrl
             TrendingAdapter.clickCode = 0
-        } else if (RelatedPlayerAdapter.clickCode == 2){
+        } else if (RelatedPlayerAdapter.clickCode == 2 && ChannelVideoAdapter.clickCode == 3) {
             videoUrl = RelatedPlayerAdapter.videoUrl
             RelatedPlayerAdapter.clickCode = 0
-        } else if (ChannelVideoAdapter.clickCode == 3){
+        } else if (RelatedPlayerAdapter.clickCode == 2) {
+            videoUrl = RelatedPlayerAdapter.videoUrl
+            RelatedPlayerAdapter.clickCode = 0
+        } else if (ChannelVideoAdapter.clickCode == 3) {
             videoUrl = ChannelVideoAdapter.videoUrl
-            ChannelVideoAdapter.clickCode = 0
+//            ChannelVideoAdapter.clickCode = 0
         }
 
         val youTubePlayerView: YouTubePlayerView
@@ -207,7 +210,7 @@ class PlayerFragment : Fragment() {
                 false
             } else {
                 iv_motionPlay.setImageResource(R.drawable.ic_play_arrow_24)
-                youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback{
+                youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
                     override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
                         youTubePlayer.pause()
                     }
