@@ -78,9 +78,6 @@ class PlayerFragment : Fragment() {
         if (TrendingAdapter.clickCode == 1) {
             videoUrl = TrendingAdapter.videoUrl
             TrendingAdapter.clickCode = 0
-        } else if (RelatedPlayerAdapter.clickCode == 2 && ChannelVideoAdapter.clickCode == 3) {
-            videoUrl = RelatedPlayerAdapter.videoUrl
-            RelatedPlayerAdapter.clickCode = 0
         } else if (RelatedPlayerAdapter.clickCode == 2) {
             videoUrl = RelatedPlayerAdapter.videoUrl
             RelatedPlayerAdapter.clickCode = 0
