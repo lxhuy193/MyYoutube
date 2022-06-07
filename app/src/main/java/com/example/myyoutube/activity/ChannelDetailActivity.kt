@@ -78,4 +78,9 @@ class ChannelDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ChannelVideoAdapter.clickCode = 0
+    }
+
 }
