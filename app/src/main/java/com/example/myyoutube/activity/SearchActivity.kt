@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myyoutube.R
+import com.example.myyoutube.adapter.ChannelVideoAdapter
 import com.example.myyoutube.adapter.SearchAdapter
 import com.example.myyoutube.adapter.TrendingAdapter
 import com.example.myyoutube.additionClass.RelatedItemInfo
@@ -22,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 //import com.google.android.youtube.player.internal.z
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.kiosk.KioskInfo
@@ -36,6 +38,8 @@ class SearchActivity : AppCompatActivity() {
     lateinit var imgBtn: ImageButton
     lateinit var textInputLayout: TextInputLayout
     lateinit var tiet_search: TextInputEditText
+    var searchDisposable: Disposable? = null
+    var wasSearchFocused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -72,7 +76,8 @@ class SearchActivity : AppCompatActivity() {
                     ): Boolean {
                         if (actionId == EditorInfo.IME_ACTION_DONE) {
                             progressBar.visibility = View.VISIBLE
-                            ExtractorHelper.searchFor(
+
+                            searchDisposable = ExtractorHelper.searchFor(
                                 0,
                                 s.toString(),
                                 arrayOfNulls<String>(0).filterNotNull(),
@@ -82,8 +87,8 @@ class SearchActivity : AppCompatActivity() {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe { result: SearchInfo ->
                                     val resultStream = mutableListOf<InfoItem>()
-                                    for (i in result.relatedItems){
-                                        if (i.infoType == InfoItem.InfoType.STREAM){
+                                    for (i in result.relatedItems) {
+                                        if (i.infoType == InfoItem.InfoType.STREAM) {
                                             resultStream.add(i)
                                         }
                                     }
@@ -118,6 +123,22 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (searchDisposable != null) {
+            searchDisposable!!.dispose()
+        }
+        SearchAdapter.clickCode = ""
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (searchDisposable != null) {
+            searchDisposable!!.dispose()
+        }
+    }
+}
+
 
 //    // NAVIGATION BACK ON ACTION BAR
 //    override fun onSupportNavigateUp(): Boolean {
@@ -127,7 +148,7 @@ class SearchActivity : AppCompatActivity() {
 //        return true
 //    }
 
-    //        //CHANGE TITLE IN ONCREATE
+//        //CHANGE TITLE IN ONCREATE
 //        val actionBar = supportActionBar
 //        actionBar!!.title = "Results"
 //        actionBar.setDisplayHomeAsUpEnabled(true)
@@ -198,4 +219,3 @@ class SearchActivity : AppCompatActivity() {
 //
 //        })
 //    }
-}

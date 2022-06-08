@@ -40,7 +40,7 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
 
     companion object {
         var videoUrl: String? = null
-        var clickCode: Int? = 0
+        var clickCode: String? = ""
     }
 
     var onItemClick: ((TrendItem) -> Unit)? = null
@@ -95,7 +95,7 @@ class TrendingAdapter(val trendItems: List<StreamInfoItem>, val context: Context
 
         holder.itemView.setOnClickListener { v : View ->
             Unit
-            clickCode = 1
+            clickCode = "TrendingAdapter"
             videoUrl = trendItems[position].url
             (context as MainActivity).supportFragmentManager.beginTransaction()
                 .replace(R.id.container, PlayerFragment()).commit()

@@ -14,6 +14,7 @@ import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
 import com.example.myyoutube.activity.ChannelDetailActivity
 import com.example.myyoutube.activity.MainActivity
+import com.example.myyoutube.activity.SearchActivity
 import com.example.myyoutube.fragment.PlayerFragment
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -22,7 +23,7 @@ class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context
     RecyclerView.Adapter<RelatedPlayerAdapter.VH>() {
     companion object {
         var videoUrl: String? = null
-        var clickCode: Int? = 0
+        var clickCode: String? = ""
     }
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
@@ -61,11 +62,15 @@ class RelatedPlayerAdapter(val relatedItem: List<InfoItem>, val context: Context
          */
         holder.itemView.setOnClickListener { v: View ->
             Unit
-            clickCode = 2
-            if (ChannelVideoAdapter.clickCode == 3) {
+            clickCode = "RelatedPlayerAdapter"
+            if (ChannelVideoAdapter.clickCode == "ChannelVideoAdapter") {
                 videoUrl = relatedItem[position].url
                 (context as ChannelDetailActivity).supportFragmentManager.beginTransaction()
                     .replace(R.id.containerChannel, PlayerFragment()).commit()
+            } else if (SearchAdapter.clickCode == "SearchAdapter") {
+                videoUrl = relatedItem[position].url
+                (context as SearchActivity).supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerSearch, PlayerFragment()).commit()
             } else {
                 videoUrl = relatedItem[position].url
                 (context as MainActivity).supportFragmentManager.beginTransaction()

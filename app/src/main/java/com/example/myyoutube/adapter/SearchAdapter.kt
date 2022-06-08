@@ -17,6 +17,9 @@ import com.example.myyoutube.Network.ServiceBuilder
 import com.example.myyoutube.Network.YoutubeEndpoints
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.R
+import com.example.myyoutube.activity.MainActivity
+import com.example.myyoutube.activity.SearchActivity
+import com.example.myyoutube.fragment.PlayerFragment
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -33,6 +36,12 @@ import retrofit2.Response
 
 class SearchAdapter(val searchItem: List<InfoItem>, val context: Context) :
     RecyclerView.Adapter<SearchAdapter.VH>() {
+
+    companion object {
+        var clickCode: String? = ""
+        var videoUrl: String? = null
+    }
+
     var onItemClick: ((TrendItem) -> Unit)? = null
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,60 +61,55 @@ class SearchAdapter(val searchItem: List<InfoItem>, val context: Context) :
         val item = searchItem[position] as StreamInfoItem
 
         Glide.with(holder.itemView.context).load(item.thumbnailUrl).into(holder.iv_thumbNail)
-        Glide.with(holder.itemView.context).load(item.uploaderAvatarUrl).into(holder.civ_channelImage)
+        Glide.with(holder.itemView.context).load(item.uploaderAvatarUrl)
+            .into(holder.civ_channelImage)
         holder.tv_videoTitle.text = searchItem[position].name
         holder.tv_channelTitle.text = item.uploaderName
 
-        //get VideoId + videoView + channelThumbnail + channelName
-        val videoUrl = item.url
-        val videoId = videoUrl.substringAfterLast("=")
-        val videoView = item.viewCount
-        val videoDate = item.textualUploadDate
-        val videoTitle = item.name
-        val channelThumbnail = item.uploaderAvatarUrl
-        val channelName = item.uploaderName
-        ///
-
-
         holder.itemView.setOnClickListener { v: View ->
             Unit
+            videoUrl = item.url
+            clickCode = "SearchAdapter"
 
-            val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("videoUrl", videoUrl)
-            intent.putExtra("videoId", videoId)
-            intent.putExtra("videoView", videoView)
-            intent.putExtra("videoTitle", videoTitle)
-            intent.putExtra("videoDate", videoDate)
-            intent.putExtra("channelThumbnail", channelThumbnail)
-            intent.putExtra("channelName", channelName)
+            (context as SearchActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.containerSearch, PlayerFragment()).commit()
+        }
 
-            ExtractorHelper.getStreamInfo(0, searchItem[position].url, false)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result: StreamInfo ->
-                    Log.i("huyhuy ", result.description.content)
-                    intent.putExtra("videoDescrip", result.description.content)
-                    intent.putExtra("videoLike", result.likeCount.toString())
+    }
 
-                    context.startActivity(intent)
+    override fun getItemCount(): Int {
+        return searchItem.size
+    }
 
-                }) { throwable: Throwable ->
-                    println("erorrrr call description failed")
-                }
+}
 
-            ExtractorHelper.getPlaylistInfo(0, searchItem[position].url, false)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ results: PlaylistInfo ->
-                    Log.i("huyhuy2 ", results.relatedItems[0].name)
+//            ExtractorHelper.getStreamInfo(0, searchItem[position].url, false)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ result: StreamInfo ->
+//                    Log.i("huyhuy ", result.description.content)
 //                    intent.putExtra("videoDescrip", result.description.content)
 //                    intent.putExtra("videoLike", result.likeCount.toString())
+//
 //                    context.startActivity(intent)
-                }) { throwable: Throwable ->
-                    println("erorrrr call playlist failed")
-                }
+//
+//                }) { throwable: Throwable ->
+//                    println("erorrrr call description failed")
+//                }
+//
+//            ExtractorHelper.getPlaylistInfo(0, searchItem[position].url, false)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ results: PlaylistInfo ->
+//                    Log.i("huyhuy2 ", results.relatedItems[0].name)
+////                    intent.putExtra("videoDescrip", result.description.content)
+////                    intent.putExtra("videoLike", result.likeCount.toString())
+////                    context.startActivity(intent)
+//                }) { throwable: Throwable ->
+//                    println("erorrrr call playlist failed")
+//                }
 
-        }
+
 //        //channel thumbnail + channel title
 //        val request = ServiceBuilder.buildService(YoutubeEndpoints::class.java)
 //        val call = request.getChannel(
@@ -186,11 +190,3 @@ class SearchAdapter(val searchItem: List<InfoItem>, val context: Context) :
 //            })
 //
 //        }
-
-    }
-
-    override fun getItemCount(): Int {
-        return searchItem.size
-    }
-
-}

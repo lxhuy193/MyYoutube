@@ -80,7 +80,7 @@ class ChannelDetailActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ChannelVideoAdapter.clickCode = 0
+        ChannelVideoAdapter.clickCode = ""
     }
 
 }

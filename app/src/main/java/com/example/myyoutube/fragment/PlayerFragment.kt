@@ -19,8 +19,6 @@ import com.bumptech.glide.Glide
 import com.example.myyoutube.R
 import com.example.myyoutube.activity.MainActivity
 import com.example.myyoutube.activity.PlayerActivity
-import com.example.myyoutube.adapter.TrendingAdapter
-import com.example.myyoutube.adapter.ViewPagerPlayerAdapter
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
 import com.google.android.material.tabs.TabLayout
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
@@ -35,8 +33,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.myyoutube.activity.ChannelDetailActivity
-import com.example.myyoutube.adapter.ChannelVideoAdapter
-import com.example.myyoutube.adapter.RelatedPlayerAdapter
+import com.example.myyoutube.adapter.*
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 
 
@@ -75,15 +72,17 @@ class PlayerFragment : Fragment() {
         /*
         YOUTUBE PLAYER VIEW
          */
-        if (TrendingAdapter.clickCode == 1) {
+        if (TrendingAdapter.clickCode == "TrendingAdapter") {
             videoUrl = TrendingAdapter.videoUrl
-            TrendingAdapter.clickCode = 0
-        } else if (RelatedPlayerAdapter.clickCode == 2) {
+            TrendingAdapter.clickCode = ""
+        } else if (RelatedPlayerAdapter.clickCode == "RelatedPlayerAdapter") {
             videoUrl = RelatedPlayerAdapter.videoUrl
-            RelatedPlayerAdapter.clickCode = 0
-        } else if (ChannelVideoAdapter.clickCode == 3) {
+            RelatedPlayerAdapter.clickCode = ""
+        } else if (ChannelVideoAdapter.clickCode == "ChannelVideoAdapter") {
             videoUrl = ChannelVideoAdapter.videoUrl
 //            ChannelVideoAdapter.clickCode = 0
+        } else if (SearchAdapter.clickCode == "SearchAdapter"){
+            videoUrl = SearchAdapter.videoUrl
         }
 
         val youTubePlayerView: YouTubePlayerView
@@ -96,10 +95,11 @@ class PlayerFragment : Fragment() {
         youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                 val id = videoId
-                youTubePlayer.loadVideo(id!!, 0f)
-                progressBarPlayerFragment.visibility = View.GONE
-                youTubePlayer.play()
-
+                if (id != null){
+                    youTubePlayer.loadVideo(id!!, 0f)
+                    progressBarPlayerFragment.visibility = View.GONE
+                    youTubePlayer.play()
+                }
                 setPlaybackSpeedButtonsClickListeners(youTubePlayer)
             }
         })

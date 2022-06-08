@@ -20,7 +20,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem
 class ChannelVideoAdapter(val videoItems: List<StreamInfoItem>, val context: Context) :
     RecyclerView.Adapter<ChannelVideoAdapter.VH>() {
     companion object {
-        var clickCode: Int? = null
+        var clickCode: String? = ""
         var videoUrl: String? = null
     }
 
@@ -57,7 +57,7 @@ class ChannelVideoAdapter(val videoItems: List<StreamInfoItem>, val context: Con
          */
         holder.itemView.setOnClickListener { v: View ->
             Unit
-            clickCode = 3
+            clickCode = "ChannelVideoAdapter"
             videoUrl = videoItems[position].url
             (context as ChannelDetailActivity).supportFragmentManager.beginTransaction()
                 .replace(R.id.containerChannel, PlayerFragment()).commit()
