@@ -26,7 +26,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playerContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="208dp"
         android:background="@drawable/bg_motion_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.35"
@@ -40,7 +40,8 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/playerContainer"
         app:layout_constraintStart_toStartOf="@+id/playerContainer"
-        app:layout_constraintTop_toTopOf="@+id/playerContainer" />
+        app:layout_constraintTop_toTopOf="@+id/playerContainer"
+        app:enableAutomaticInitialization="false"/>
 
     <ImageView
         android:id="@+id/iv_motionClose"

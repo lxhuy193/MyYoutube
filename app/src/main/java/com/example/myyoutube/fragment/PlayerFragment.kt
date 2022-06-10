@@ -20,6 +20,7 @@ import com.example.myyoutube.R
 import com.example.myyoutube.activity.MainActivity
 import com.example.myyoutube.activity.PlayerActivity
 import com.example.myyoutube.newpipeExtracter.ExtractorHelper
+import com.example.myyoutube.additionClass.CustomPlayerUiController
 import com.google.android.material.tabs.TabLayout
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -35,6 +36,9 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.myyoutube.activity.ChannelDetailActivity
 import com.example.myyoutube.adapter.*
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 
 
 class PlayerFragment : Fragment() {
@@ -69,6 +73,7 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         /*
         YOUTUBE PLAYER VIEW
          */
@@ -81,7 +86,7 @@ class PlayerFragment : Fragment() {
         } else if (ChannelVideoAdapter.clickCode == "ChannelVideoAdapter") {
             videoUrl = ChannelVideoAdapter.videoUrl
 //            ChannelVideoAdapter.clickCode = 0
-        } else if (SearchAdapter.clickCode == "SearchAdapter"){
+        } else if (SearchAdapter.clickCode == "SearchAdapter") {
             videoUrl = SearchAdapter.videoUrl
         }
 
@@ -89,13 +94,32 @@ class PlayerFragment : Fragment() {
         youTubePlayerView = view.findViewById(R.id.utubePlayer)
         lifecycle.addObserver(youTubePlayerView)
 
+        //////////
+        val customPlayerUi = youTubePlayerView.inflateCustomPlayerUi(R.layout.custom_player_ui)
+        val listener: YouTubePlayerListener = object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                val customPlayerUiController = CustomPlayerUiController(
+                    activity,
+                    customPlayerUi,
+                    youTubePlayer,
+                    youTubePlayerView
+                )
+                youTubePlayer.addListener(customPlayerUiController)
+                youTubePlayerView.addFullScreenListener(customPlayerUiController)
+                youTubePlayer.loadOrCueVideo(lifecycle,  videoUrl!!.substringAfterLast("="), 0f)
+            }
+        }
+
+        val option = IFramePlayerOptions.Builder().controls(0).build()
+        youTubePlayerView.initialize(listener, option)
+
         val videoId = videoUrl?.substringAfterLast("=")
         val progressBarPlayerFragment =
             view.findViewById<ProgressBar>(R.id.progressBarPlayerFragment)
         youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                 val id = videoId
-                if (id != null){
+                if (id != null) {
                     youTubePlayer.loadVideo(id!!, 0f)
                     progressBarPlayerFragment.visibility = View.GONE
                     youTubePlayer.play()
