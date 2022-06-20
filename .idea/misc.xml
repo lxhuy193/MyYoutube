@@ -4,10 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2388888888888889" />
+        <entry key="..\:/Users/HLC_2021/.gradle/caches/transforms-3/e6a5981a3451bd78bd139a643492edc4/transformed/core-11.0.1/res/drawable-anydpi-v21/ayp_ic_youtube_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/.gradle/caches/transforms-3/e6a5981a3451bd78bd139a643492edc4/transformed/core-11.0.1/res/drawable/ayp_drop_shadow_bottom.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/.gradle/caches/transforms-3/e6a5981a3451bd78bd139a643492edc4/transformed/core-11.0.1/res/drawable/ayp_drop_shadow_top.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_drop_shadow_bottom.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_drop_shadow_top.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_ic_fullscreen_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_ic_fullscreen_exit_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_ic_menu_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_ic_play_36dp.xml" value="0.1" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/drawable/ayp_ic_youtube_24dp.xml" value="0.1" />
         <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/activity_channel_detail.xml" value="0.25833333333333336" />
         <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/activity_player.xml" value="0.25" />
         <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/activity_search.xml" value="0.25833333333333336" />
+        <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/ayp_default_player_ui.xml" value="0.1" />
         <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/custom_player_ui.xml" value="0.1" />
         <entry key="..\:/Users/HLC_2021/Desktop/Android App/MyYoutube/app/src/main/res/layout/fragment_player.xml" value="0.2" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.106" />

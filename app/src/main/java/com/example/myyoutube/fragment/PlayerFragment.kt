@@ -3,6 +3,7 @@ package com.example.myyoutube.fragment
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -35,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.myyoutube.activity.ChannelDetailActivity
 import com.example.myyoutube.adapter.*
+import com.example.myyoutube.additionClass.DefaultPlayerUiController
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
@@ -45,6 +47,7 @@ class PlayerFragment : Fragment() {
 
     private val TAG = "PLAYER_FRAGMENT"
     private var paused = false
+    private lateinit var youTubePlayerView: YouTubePlayerView
 
     companion object {
         var videoUrl: String? = null
@@ -57,7 +60,7 @@ class PlayerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        (activity as MainActivity?)!!.window.requestFeature(Window.FEATURE_ACTION_BAR)
-//        (activity as MainActivity?)!!.supportActionBar!!.hide()
+        (activity as MainActivity?)!!.supportActionBar!!.hide()
         super.onCreate(savedInstanceState)
     }
 
@@ -90,28 +93,37 @@ class PlayerFragment : Fragment() {
             videoUrl = SearchAdapter.videoUrl
         }
 
-        val youTubePlayerView: YouTubePlayerView
-        youTubePlayerView = view.findViewById(R.id.utubePlayer)
-        lifecycle.addObserver(youTubePlayerView)
+        /*
+        CUSTOM UI VIDEO PLAYER
+         */
 
-        //////////
-        val customPlayerUi = youTubePlayerView.inflateCustomPlayerUi(R.layout.custom_player_ui)
+        youTubePlayerView = view.findViewById(R.id.utubePlayer)
+//        lifecycle.addObserver(youTubePlayerView)
+
+//        val customPlayerUi = youTubePlayerView.inflateCustomPlayerUi(R.layout.custom_player_ui)
         val listener: YouTubePlayerListener = object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
-                val customPlayerUiController = CustomPlayerUiController(
-                    activity,
-                    customPlayerUi,
-                    youTubePlayer,
-                    youTubePlayerView
-                )
-                youTubePlayer.addListener(customPlayerUiController)
-                youTubePlayerView.addFullScreenListener(customPlayerUiController)
+                val defaultPlayerUiController = DefaultPlayerUiController(youTubePlayerView, youTubePlayer)
+                youTubePlayerView.setCustomPlayerUi(defaultPlayerUiController.rootView)
+
+//                val customPlayerUiController = CustomPlayerUiController(
+//                    activity,
+//                    customPlayerUi,
+//                    youTubePlayer,
+//                    youTubePlayerView
+//                )
+//                youTubePlayer.addListener(customPlayerUiController)
+//                youTubePlayerView.addFullScreenListener(customPlayerUiController)
                 youTubePlayer.loadOrCueVideo(lifecycle,  videoUrl!!.substringAfterLast("="), 0f)
             }
         }
 
+        //Disable web ui
         val option = IFramePlayerOptions.Builder().controls(0).build()
         youTubePlayerView.initialize(listener, option)
+
+
+
 
         val videoId = videoUrl?.substringAfterLast("=")
         val progressBarPlayerFragment =
@@ -128,6 +140,8 @@ class PlayerFragment : Fragment() {
             }
         })
 
+        //ENABLE PLAY BACKGROUND
+        youTubePlayerView.enableBackgroundPlayback(true)
 
         /*
         VIEWPAGER
@@ -305,6 +319,17 @@ class PlayerFragment : Fragment() {
             youTubePlayer.setPlaybackRate(
                 PlayerConstants.PlaybackRate.RATE_2
             )
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            youTubePlayerView.enterFullScreen()
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            youTubePlayerView.exitFullScreen()
         }
     }
 }

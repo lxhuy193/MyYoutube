@@ -43,6 +43,7 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
+            motion:flow_horizontalBias="1.0"
             android:id="@+id/utubePlayer"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -50,6 +51,24 @@
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="@id/playerContainer"
             motion:layout_constraintTop_toTopOf="@id/playerContainer" />
+        <Constraint
+            android:visibility="gone"
+            android:id="@+id/iv_motionClose"
+            motion:layout_constraintEnd_toEndOf="@id/playerContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@id/playerContainer"
+            android:alpha="0"
+            motion:layout_constraintTop_toTopOf="@id/playerContainer" />
+        <Constraint
+            android:visibility="gone"
+            android:id="@+id/iv_motionPlay"
+            motion:layout_constraintEnd_toStartOf="@+id/iv_motionClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/iv_motionClose"
+            android:alpha="0"
+            motion:layout_constraintTop_toTopOf="@+id/iv_motionClose" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -58,7 +77,6 @@
             android:layout_width="0dp"
             android:layout_height="72dp"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintDimensionRatio="w,"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"

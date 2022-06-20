@@ -2,7 +2,7 @@
 <com.example.myyoutube.additionClass.SingleViewTouchableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/motionLayout"
+    android:id="@+id/playerMotionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/fragment_player_scene">
@@ -26,7 +26,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playerContainer"
         android:layout_width="match_parent"
-        android:layout_height="208dp"
+        android:layout_height="224dp"
         android:background="@drawable/bg_motion_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.35"
