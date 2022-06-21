@@ -1,6 +1,7 @@
 package com.example.myyoutube.additionClass
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
@@ -9,7 +10,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.example.myyoutube.activity.MainActivity
+import com.example.myyoutube.fragment.PlayerFragment
+import com.example.myyoutube.fragment.isFullScreen
 import com.pierfrancescosoffritti.androidyoutubeplayer.R
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -21,11 +26,12 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.utils.FadeViewHel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.views.YouTubePlayerSeekBar
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.views.YouTubePlayerSeekBarListener
 
+//var isFullScreen = false
+
 class DefaultPlayerUiController(
     private val youTubePlayerView: YouTubePlayerView,
     private val youTubePlayer: YouTubePlayer
 ) : PlayerUiController {
-
     val rootView: View =
         View.inflate(youTubePlayerView.context, R.layout.ayp_default_player_ui, null)
 
@@ -49,7 +55,11 @@ class DefaultPlayerUiController(
     private val menuButton: ImageView = rootView.findViewById(R.id.menu_button)
     private val playPauseButton: ImageView = rootView.findViewById(R.id.play_pause_button)
     private val youTubeButton: ImageView = rootView.findViewById(R.id.youtube_button)
+
     private val fullScreenButton: ImageView = rootView.findViewById(R.id.fullscreen_button)
+    fun getFullScreenButton (): ImageView {
+        return fullScreenButton
+    }
 
     private val customActionLeft: ImageView = rootView.findViewById(R.id.custom_action_left_button)
     private val customActionRight: ImageView =
@@ -145,8 +155,45 @@ class DefaultPlayerUiController(
         }
         panel.setOnClickListener { fadeControlsContainer.toggleVisibility() }
         playPauseButton.setOnClickListener { onPlayButtonPressed() }
+
         fullScreenButton.setOnClickListener { onFullScreenButtonListener.onClick(fullScreenButton) }
+//        fullScreenButton.setOnClickListener {
+//            with(PlayerFragment.motionLayout){
+//                getConstraintSet(R.id.start)
+//            }
+//        }
+
+//        PlayerFragment.motionLayout = view.findViewById(com.example.myyoutube.R.id.playerMotionLayout)
+//
+//        fullScreenButton.setOnClickListener {
+//            if (!isFullScreen) {
+//                with(PlayerFragment.motionLayout) {
+//                    getConstraintSet(com.example.myyoutube.R.id.start).constrainHeight(com.example.myyoutube.R.id.utubePlayer, -1)
+//                    enableTransition(com.example.myyoutube.R.id.yt_transition, false)
+//                }
+//                val playerFragment =
+//                rootView.findViewById<ConstraintLayout>(com.example.myyoutube.R.id.playerContainer).isClickable = true
+//                view.findViewById<LinearLayout>(com.example.myyoutube.R.id.linearLayout).visibility = View.GONE
+//                view.findViewById<LinearLayout>(com.example.myyoutube.R.id.linearLayoutScroll).visibility = View.GONE
+//                val mainActivity = activity as MainActivity
+//                mainActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+//                isFullScreen = true
+//            } else {
+//                with(PlayerFragment.motionLayout){
+//                    getConstraintSet(com.example.myyoutube.R.id.start).constrainHeight(com.example.myyoutube.R.id.utubePlayer, 0)
+//                    enableTransition(com.example.myyoutube.R.id.yt_transition, true)
+//                }
+//                view.findViewById<ConstraintLayout>(com.example.myyoutube.R.id.playerContainer).isClickable = false
+//                view.findViewById<LinearLayout>(com.example.myyoutube.R.id.linearLayout).visibility = View.VISIBLE
+//                view.findViewById<LinearLayout>(com.example.myyoutube.R.id.linearLayoutScroll).visibility = View.VISIBLE
+//                val mainActivity = activity as MainActivity
+//                mainActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+//                isFullScreen = false
+//            }
+//        }
+
         menuButton.setOnClickListener { onMenuButtonClickListener.onClick(menuButton) }
+
     }
 
     override fun showVideoTitle(show: Boolean): PlayerUiController {

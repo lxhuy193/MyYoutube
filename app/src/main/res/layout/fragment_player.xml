@@ -26,19 +26,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playerContainer"
         android:layout_width="match_parent"
-        android:layout_height="224dp"
+        android:layout_height="0dp"
         android:background="@drawable/bg_motion_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/utubePlayer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.35"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/utubePlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/playerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/playerContainer"
         app:layout_constraintTop_toTopOf="@+id/playerContainer"
         app:enableAutomaticInitialization="false"/>
@@ -233,11 +231,11 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
         <LinearLayout
+            android:id="@+id/linearLayoutScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"

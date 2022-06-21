@@ -34,6 +34,7 @@ import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.myyoutube.activity.ChannelDetailActivity
 import com.example.myyoutube.adapter.*
 import com.example.myyoutube.additionClass.DefaultPlayerUiController
@@ -42,6 +43,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.You
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 
+var isFullScreen = false
 
 class PlayerFragment : Fragment() {
 
@@ -56,6 +58,9 @@ class PlayerFragment : Fragment() {
         var videoDate: String? = null
         var videoDescrip: String? = null
         var channelUrl: String? = null
+
+        //        var motionLayout : MotionLayout? = null
+        lateinit var motionLayout: MotionLayout
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +80,6 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         /*
         YOUTUBE PLAYER VIEW
@@ -103,8 +107,42 @@ class PlayerFragment : Fragment() {
 //        val customPlayerUi = youTubePlayerView.inflateCustomPlayerUi(R.layout.custom_player_ui)
         val listener: YouTubePlayerListener = object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
-                val defaultPlayerUiController = DefaultPlayerUiController(youTubePlayerView, youTubePlayer)
+                val defaultPlayerUiController =
+                    DefaultPlayerUiController(youTubePlayerView, youTubePlayer)
                 youTubePlayerView.setCustomPlayerUi(defaultPlayerUiController.rootView)
+
+                motionLayout = view.findViewById(R.id.playerMotionLayout)
+                defaultPlayerUiController.getFullScreenButton().setOnClickListener {
+                    if (!isFullScreen) {
+                        with(motionLayout) {
+                            getConstraintSet(R.id.start).constrainHeight(R.id.utubePlayer, -1)
+                            enableTransition(R.id.yt_transition, false)
+                        }
+
+                        view.findViewById<ConstraintLayout>(R.id.playerContainer).isClickable = true
+                        view.findViewById<LinearLayout>(R.id.linearLayout).visibility = View.GONE
+                        view.findViewById<LinearLayout>(R.id.linearLayoutScroll).visibility =
+                            View.GONE
+                        val mainActivity = activity as MainActivity
+                        mainActivity.requestedOrientation =
+                            ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+                        isFullScreen = true
+                    } else {
+                        with(motionLayout) {
+                            getConstraintSet(R.id.start).constrainHeight(R.id.utubePlayer, 0)
+                            enableTransition(R.id.yt_transition, true)
+                        }
+                        view.findViewById<ConstraintLayout>(R.id.playerContainer).isClickable =
+                            false
+                        view.findViewById<LinearLayout>(R.id.linearLayout).visibility = View.VISIBLE
+                        view.findViewById<LinearLayout>(R.id.linearLayoutScroll).visibility =
+                            View.VISIBLE
+                        val mainActivity = activity as MainActivity
+                        mainActivity.requestedOrientation =
+                            ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+                        isFullScreen = false
+                    }
+                }
 
 //                val customPlayerUiController = CustomPlayerUiController(
 //                    activity,
@@ -114,15 +152,13 @@ class PlayerFragment : Fragment() {
 //                )
 //                youTubePlayer.addListener(customPlayerUiController)
 //                youTubePlayerView.addFullScreenListener(customPlayerUiController)
-                youTubePlayer.loadOrCueVideo(lifecycle,  videoUrl!!.substringAfterLast("="), 0f)
+                youTubePlayer.loadOrCueVideo(lifecycle, videoUrl!!.substringAfterLast("="), 0f)
             }
         }
 
         //Disable web ui
         val option = IFramePlayerOptions.Builder().controls(0).build()
         youTubePlayerView.initialize(listener, option)
-
-
 
 
         val videoId = videoUrl?.substringAfterLast("=")
